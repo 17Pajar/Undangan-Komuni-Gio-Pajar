@@ -11,12 +11,7 @@
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body 
-<audio autoplay loop>
-  <source src="https://www.bensound.com/bensound-music/bensound-tenderness.mp3" type="audio/mpeg">
-  Browser Anda tidak mendukung pemutar audio.
-</audio>
-        {
+        body {
             font-family: 'Inter', sans-serif;
             scroll-behavior: smooth; /* Smooth scrolling for anchor links */
             overflow-x: hidden; /* Prevent horizontal scroll */
@@ -121,29 +116,11 @@
             text-decoration: none;
             cursor: pointer;
         }
-body {
-  border: 20px solid transparent;
-  border-image: url('motif songke.jpeg') 20 round;
-}
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
     <!-- Firebase SDKs -->
-    
-<script>
-  const __app_id = "komuni-moses";
-  const __firebase_config = JSON.stringify({
-    apiKey: "AIzaSyAbOpS4Pt-ADFCnzle1uCt1DWPp9saFsRM",
-    authDomain: "komuni-moses.firebaseapp.com",
-    projectId: "komuni-moses",
-    storageBucket: "komuni-moses.appspot.com",
-    messagingSenderId: "97500198342",
-    appId: "1:97500198342:web:63a96e072a72d9f9ab6ec7",
-    measurementId: "G-7VZPSSMY6F"
-  });
-</script>
-
-<script type="module">
+    <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, collection, query, where, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
@@ -173,7 +150,7 @@ body {
         // Initialize Firebase and Auth
         async function initializeFirebase() {
             try {
-                // Ensure __app_id and __firebase_config are defined
+                // Ensure __app_id and __firebase_config are defined by the Canvas environment
                 appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
                 const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
 
@@ -186,11 +163,24 @@ body {
                 db = getFirestore(app);
                 auth = getAuth(app);
 
-                // Sign in with custom token or anonymously
                 if (typeof __initial_auth_token !== 'undefined') {
-                    await signInWithCustomToken(auth, __initial_auth_token);
+                    try {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                        console.log("Signed in with custom token.");
+                    } catch (tokenError) {
+                        console.error("Error signing in with custom token:", tokenError);
+                        // If custom token is mismatched or invalid, fall back to anonymous sign-in
+                        if (tokenError.code === 'auth/custom-token-mismatch' || tokenError.code === 'auth/invalid-custom-token') {
+                            showModal("Token autentikasi tidak valid. Mencoba masuk secara anonim.");
+                            await signInAnonymously(auth);
+                            console.log("Signed in anonymously due to custom token error.");
+                        } else {
+                            throw tokenError; // Re-throw other errors
+                        }
+                    }
                 } else {
                     await signInAnonymously(auth);
+                    console.log("Signed in anonymously (no custom token provided).");
                 }
 
                 onAuthStateChanged(auth, (user) => {
@@ -206,9 +196,10 @@ body {
                         // Start listening to guestbook messages after auth is ready
                         setupGuestbookListener();
                     } else {
+                        // This branch might be hit if signInAnonymously also fails or if user logs out
                         userId = crypto.randomUUID(); // Fallback for unauthenticated users
                         isAuthReady = true;
-                        console.log("Firebase initialized, signed in anonymously or no user:", userId);
+                        console.log("Firebase initialized, no active user session (or anonymous fallback):", userId);
                         const userIdDisplay = document.getElementById('userIdDisplay');
                         if (userIdDisplay) {
                             userIdDisplay.textContent = `User ID: ${userId} (Anon)`;
@@ -218,8 +209,8 @@ body {
                 });
 
             } catch (error) {
-                console.error("Error initializing Firebase or signing in:", error);
-                showModal("Failed to initialize Firebase. Data persistence may not work. Error: " + error.message);
+                console.error("Critical error during Firebase initialization:", error);
+                showModal("Gagal menginisialisasi Firebase secara keseluruhan. Data mungkin tidak tersimpan. Error: " + error.message);
             }
         }
 
@@ -583,19 +574,18 @@ body {
         <div class="modal-content">
             <span class="close-button" onclick="window.closeMusicModal()">&times;</span>
             <h3 class="text-xl font-bold mb-4 text-sage-green-dark">Musik Latar</h3>
-            <p class="text-gray-700 mb-4">Putar musik untuk menambah suasana.</p>
-            <!-- SoundCloud Embed Player -->
-            <iframe
-                width="100%"
-                height="166"
-                scrolling="no"
-                frameborder="no"
-                allow="autoplay"
-                src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/trending-music-id/sets/electronic&color=%23A0C49D&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"
-            ></iframe>
-            <p class="text-sm text-gray-500 mt-4">
-                <i class="fas fa-info-circle mr-1"></i> Anda dapat mengganti link SoundCloud ini dengan playlist atau lagu pilihan Anda.
+            <p class="text-gray-700 mb-4">
+                Musik latar akan diputar secara otomatis (tetapi mungkin dalam keadaan **mute** karena kebijakan browser). Silakan klik tombol "Unmute" jika musik tidak bersuara.
             </p>
+            <!-- Audio Player -->
+            <audio id="backgroundMusic" loop autoplay muted>
+                <!-- GANTI URL INI DENGAN LINK LANGSUNG KE FILE MP3 ANDA YANG DIHOSTING PUBLIK -->
+                <source src="https://example.com/your-instrumen.mp3" type="audio/mpeg">
+                Browser Anda tidak mendukung elemen audio.
+            </audio>
+            <button id="unmuteButton" class="mt-4 px-6 py-2 bg-sage-green text-white rounded-full hover:bg-opacity-90 transition-colors">
+                <i class="fas fa-volume-up mr-2"></i> Unmute
+            </button>
         </div>
     </div>
 
@@ -686,14 +676,44 @@ body {
         // Music Player Modal Logic
         const musicModal = document.getElementById('musicModal');
         const openMusicModalBtn = document.getElementById('open-music-modal');
-        // The close button for music modal is now globally accessible via window.closeMusicModal
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const unmuteButton = document.getElementById('unmuteButton');
+
+        // Try to play music when the page loads (it will likely be muted)
+        window.addEventListener('load', () => {
+            backgroundMusic.play().catch(error => {
+                console.log("Autoplay was prevented or muted:", error);
+                // If autoplay is prevented, the user will need to interact
+                // The modal button will handle this.
+            });
+        });
+
 
         openMusicModalBtn.addEventListener('click', () => {
             musicModal.style.display = 'flex';
+            // When modal opens, ensure music is playing (still might be muted)
+            backgroundMusic.play().catch(error => {
+                console.log("Attempted to play music on modal open, but was prevented:", error);
+            });
+        });
+
+        unmuteButton.addEventListener('click', () => {
+            if (backgroundMusic.muted) {
+                backgroundMusic.muted = false;
+                backgroundMusic.play().catch(error => {
+                    console.log("Error playing music after unmute:", error);
+                });
+                unmuteButton.innerHTML = '<i class="fas fa-volume-up mr-2"></i> Suara Aktif';
+            } else {
+                backgroundMusic.muted = true;
+                unmuteButton.innerHTML = '<i class="fas fa-volume-mute mr-2"></i> Mute';
+            }
         });
 
         window.closeMusicModal = function() { // Made globally accessible
             musicModal.style.display = 'none';
+            // Optionally pause music when modal is closed
+            // backgroundMusic.pause();
         }
 
         // Close modal if clicked outside content
