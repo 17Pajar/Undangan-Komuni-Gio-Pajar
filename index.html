@@ -126,12 +126,15 @@
         import { getFirestore, doc, getDoc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, collection, query, where, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Global variables for Firebase
-        let app;
-        let db;
-        let auth;
-        let userId;
-        let appId;
-        let isAuthReady = false;
+        const firebaseConfig = {
+  apiKey: "AIzaSyAbOpS4Pt-ADFCnzle1uCt1DWPp9saFsRM",
+  authDomain: "komuni-moses.firebaseapp.com",
+  projectId: "komuni-moses",
+  storageBucket: "komuni-moses.firebasestorage.app",
+  messagingSenderId: "97500198342",
+  appId: "1:97500198342:web:63a96e072a72d9f9ab6ec7",
+  measurementId: "G-7VZPSSMY6F"
+};
 
         // Function to show a custom modal message
         function showModal(message) {
