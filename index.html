@@ -121,236 +121,143 @@
 </head>
 <body class="bg-gray-50 text-gray-800">
     <!-- Firebase SDKs -->
-    <script type="module">
-  import {{ initializeApp }} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-  import {{ getAuth, signInAnonymously }} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-  import {{ getFirestore, collection, addDoc }} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+   <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+  import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+  import {
+    getFirestore,
+    collection,
+    addDoc,
+    serverTimestamp,
+    onSnapshot,
+    query
+  } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-  const firebaseConfig = {{
+  const appId = "komuni-moses"; // ⚠️ Gantilah jika berbeda
+
+  const firebaseConfig = {
     apiKey: "AIzaSyAbOpS4Pt-ADFCnzle1uCt1DWPp9saFsRM",
     authDomain: "komuni-moses.firebaseapp.com",
     projectId: "komuni-moses",
-    storageBucket: "komuni-moses.appspot.com",  // ✅ PERBAIKI: bukan firebasestorage.app
+    storageBucket: "komuni-moses.appspot.com",
     messagingSenderId: "97500198342",
     appId: "1:97500198342:web:63a96e072a72d9f9ab6ec7",
     measurementId: "G-7VZPSSMY6F"
-  }};
+  };
 
-  // Inisialisasi Firebase
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  // Login anonim (agar bisa akses firestore)
-  signInAnonymously(auth)
-    .then(() => {{
-      console.log("User berhasil login anonim");
-    }})
-    .catch((error) => {{
-      console.error("Gagal login anonim:", error.message);
-    }});
+  let userId = null;
 
-        // Global variables for Firebase
-        let app;
-        let db;
-        let auth;
-        let userId;
-        let appId;
-        let isAuthReady = false;
+  function showModal(message) {
+    const modal = document.getElementById('myModal');
+    const modalMessage = document.getElementById('modalMessage');
+    modalMessage.textContent = message;
+    modal.style.display = 'flex';
+  }
 
-        // Function to show a custom modal message
-        function showModal(message) {
-            const modal = document.getElementById('myModal');
-            const modalMessage = document.getElementById('modalMessage');
-            modalMessage.textContent = message;
-            modal.style.display = 'flex'; // Use flex to center content
-        }
+  window.closeModal = function () {
+    document.getElementById('myModal').style.display = 'none';
+  };
 
-        // Function to close the custom modal
-        window.closeModal = function() { // Made globally accessible
-            const modal = document.getElementById('myModal');
-            modal.style.display = 'none';
-        }
+  function setupGuestbookListener() {
+    const q = query(collection(db, `artifacts/${appId}/public/data/guestbook`));
+    onSnapshot(q, (snapshot) => {
+      const messages = [];
+      snapshot.forEach(doc => {
+        messages.push({ id: doc.id, ...doc.data() });
+      });
+      displayGuestbookMessages(messages);
+    }, (error) => {
+      showModal("Gagal memuat ucapan tamu: " + error.message);
+    });
+  }
 
-        // Initialize Firebase and Auth
-        async function initializeFirebase() {
-            try {
-                // Ensure __app_id and __firebase_config are defined by the Canvas environment
-                appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-                const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+  function displayGuestbookMessages(messages) {
+    const guestbookContainer = document.getElementById('guestbookMessages');
+    guestbookContainer.innerHTML = '';
 
-                if (Object.keys(firebaseConfig).length === 0) {
-                    showModal('Firebase configuration is missing. Data persistence will not work.');
-                    return;
-                }
+    messages.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
 
-                app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
+    if (messages.length === 0) {
+      guestbookContainer.innerHTML = '<p class="text-gray-600 text-center">Belum ada ucapan. Jadilah yang pertama!</p>';
+      return;
+    }
 
-                if (typeof __initial_auth_token !== 'undefined') {
-                    try {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                        console.log("Signed in with custom token.");
-                    } catch (tokenError) {
-                        console.error("Error signing in with custom token:", tokenError);
-                        // If custom token is mismatched or invalid, fall back to anonymous sign-in
-                        if (tokenError.code === 'auth/custom-token-mismatch' || tokenError.code === 'auth/invalid-custom-token') {
-                            showModal("Token autentikasi tidak valid. Mencoba masuk secara anonim.");
-                            await signInAnonymously(auth);
-                            console.log("Signed in anonymously due to custom token error.");
-                        } else {
-                            throw tokenError; // Re-throw other errors
-                        }
-                    }
-                } else {
-                    await signInAnonymously(auth);
-                    console.log("Signed in anonymously (no custom token provided).");
-                }
+    messages.forEach(msg => {
+      const el = document.createElement('div');
+      el.className = 'bg-white p-4 rounded-lg shadow-sm mb-4 border border-gray-200';
+      const date = msg.timestamp ? new Date(msg.timestamp.seconds * 1000).toLocaleString('id-ID') : 'Waktu tidak diketahui';
+      el.innerHTML = `
+        <p class="font-semibold text-lg">${msg.name}</p>
+        <p class="text-sm text-gray-500">${date}</p>
+        <p class="text-gray-700">${msg.message}</p>
+      `;
+      guestbookContainer.appendChild(el);
+    });
+  }
 
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        userId = user.uid;
-                        isAuthReady = true;
-                        console.log("Firebase initialized and user authenticated:", userId);
-                        // Display userId on the UI for multi-user apps
-                        const userIdDisplay = document.getElementById('userIdDisplay');
-                        if (userIdDisplay) {
-                            userIdDisplay.textContent = `User ID: ${userId}`;
-                        }
-                        // Start listening to guestbook messages after auth is ready
-                        setupGuestbookListener();
-                    } else {
-                        // This branch might be hit if signInAnonymously also fails or if user logs out
-                        userId = crypto.randomUUID(); // Fallback for unauthenticated users
-                        isAuthReady = true;
-                        console.log("Firebase initialized, no active user session (or anonymous fallback):", userId);
-                        const userIdDisplay = document.getElementById('userIdDisplay');
-                        if (userIdDisplay) {
-                            userIdDisplay.textContent = `User ID: ${userId} (Anon)`;
-                        }
-                        setupGuestbookListener(); // Still listen, but write access might be limited by rules
-                    }
-                });
+  window.submitRsvp = async function () {
+    const name = document.getElementById('rsvpName').value;
+    const attendance = document.getElementById('rsvpAttendance').value;
+    const message = document.getElementById('rsvpMessage').value;
 
-            } catch (error) {
-                console.error("Critical error during Firebase initialization:", error);
-                showModal("Gagal menginisialisasi Firebase secara keseluruhan. Data mungkin tidak tersimpan. Error: " + error.message);
-            }
-        }
+    if (!name || !attendance) {
+      showModal("Nama dan Kehadiran wajib diisi.");
+      return;
+    }
 
-        // Function to add RSVP
-        window.submitRsvp = async function() {
-            if (!isAuthReady || !db || !userId) {
-                showModal("Firebase is not ready. Please try again in a moment.");
-                return;
-            }
+    try {
+      await addDoc(collection(db, `artifacts/${appId}/public/data/rsvps`), {
+        name,
+        attendance,
+        message,
+        userId,
+        timestamp: serverTimestamp()
+      });
+      showModal("RSVP berhasil dikirim!");
+      document.getElementById('rsvpForm').reset();
+    } catch (e) {
+      showModal("Gagal mengirim RSVP: " + e.message);
+    }
+  };
 
-            const name = document.getElementById('rsvpName').value;
-            const attendance = document.getElementById('rsvpAttendance').value;
-            const message = document.getElementById('rsvpMessage').value;
+  window.submitGuestbook = async function () {
+    const name = document.getElementById('guestName').value;
+    const message = document.getElementById('guestMessage').value;
 
-            if (!name || !attendance) {
-                showModal("Nama dan Kehadiran wajib diisi.");
-                return;
-            }
+    if (!name || !message) {
+      showModal("Nama dan Ucapan wajib diisi.");
+      return;
+    }
 
-            try {
-                await addDoc(collection(db, `artifacts/${appId}/public/data/rsvps`), {
-                    name: name,
-                    attendance: attendance,
-                    message: message,
-                    timestamp: serverTimestamp(),
-                    userId: userId
-                });
-                showModal("RSVP Anda berhasil dikirim! Terima kasih.");
-                document.getElementById('rsvpForm').reset();
-            } catch (e) {
-                console.error("Error adding RSVP document: ", e);
-                showModal("Gagal mengirim RSVP. Silakan coba lagi. Error: " + e.message);
-            }
-        };
+    try {
+      await addDoc(collection(db, `artifacts/${appId}/public/data/guestbook`), {
+        name,
+        message,
+        userId,
+        timestamp: serverTimestamp()
+      });
+      showModal("Ucapan berhasil dikirim!");
+      document.getElementById('guestbookForm').reset();
+    } catch (e) {
+      showModal("Gagal mengirim ucapan: " + e.message);
+    }
+  };
 
-        // Function to add Guestbook message
-        window.submitGuestbook = async function() {
-            if (!isAuthReady || !db || !userId) {
-                showModal("Firebase is not ready. Please try again in a moment.");
-                return;
-            }
-
-            const guestName = document.getElementById('guestName').value;
-            const guestMessage = document.getElementById('guestMessage').value;
-
-            if (!guestName || !guestMessage) {
-                showModal("Nama dan Ucapan wajib diisi.");
-                return;
-            }
-
-            try {
-                await addDoc(collection(db, `artifacts/${appId}/public/data/guestbook`), {
-                    name: guestName,
-                    message: guestMessage,
-                    timestamp: serverTimestamp(),
-                    userId: userId
-                });
-                showModal("Ucapan Anda berhasil dikirim! Terima kasih.");
-                document.getElementById('guestbookForm').reset();
-            } catch (e) {
-                console.error("Error adding guestbook document: ", e);
-                showModal("Gagal mengirim ucapan. Silakan coba lagi. Error: " + e.message);
-            }
-        };
-
-        // Listen for real-time guestbook updates
-        function setupGuestbookListener() {
-            if (!db || !appId) {
-                console.warn("Firestore or App ID not available for guestbook listener.");
-                return;
-            }
-            const q = query(collection(db, `artifacts/${appId}/public/data/guestbook`));
-            onSnapshot(q, (snapshot) => {
-                const messages = [];
-                snapshot.forEach((doc) => {
-                    const data = doc.data();
-                    messages.push({ id: doc.id, ...data });
-                });
-                displayGuestbookMessages(messages);
-            }, (error) => {
-                console.error("Error listening to guestbook messages:", error);
-                showModal("Gagal memuat ucapan tamu. Error: " + error.message);
-            });
-        }
-
-        // Display guestbook messages
-        function displayGuestbookMessages(messages) {
-            const guestbookContainer = document.getElementById('guestbookMessages');
-            guestbookContainer.innerHTML = ''; // Clear previous messages
-
-            // Sort messages by timestamp descending
-            messages.sort((a, b) => (b.timestamp?.toDate() || 0) - (a.timestamp?.toDate() || 0));
-
-            if (messages.length === 0) {
-                guestbookContainer.innerHTML = '<p class="text-gray-600 text-center">Belum ada ucapan. Jadilah yang pertama!</p>';
-                return;
-            }
-
-            messages.forEach(msg => {
-                const messageElement = document.createElement('div');
-                messageElement.className = 'bg-white p-4 rounded-lg shadow-sm mb-4 border border-gray-200';
-                const date = msg.timestamp ? new Date(msg.timestamp.seconds * 1000).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }) : 'Tanggal tidak diketahui';
-                messageElement.innerHTML = `
-                    <p class="font-semibold text-lg text-gray-900">${msg.name}</p>
-                    <p class="text-sm text-gray-500 mb-2">${date}</p>
-                    <p class="text-gray-700">${msg.message}</p>
-                `;
-                guestbookContainer.appendChild(messageElement);
-            });
-        }
-
-        // Initialize Firebase when the window loads
-        window.addEventListener('load', initializeFirebase);
-    </script>
-
+  window.addEventListener("load", async () => {
+    try {
+      const result = await signInAnonymously(auth);
+      userId = result.user.uid;
+      console.log("Signed in as", userId);
+      setupGuestbookListener();
+    } catch (e) {
+      showModal("Gagal masuk ke Firebase: " + e.message);
+    }
+  });
+</script>
     <!-- Custom Modal for Alerts/Confirmations -->
     <div id="myModal" class="modal">
         <div class="modal-content">
