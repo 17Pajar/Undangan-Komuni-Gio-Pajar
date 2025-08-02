@@ -120,21 +120,32 @@
 </head>
 <body class="bg-gray-50 text-gray-800">
     <!-- Firebase SDKs -->
-    <script type="module">
+    
+<script>
+  const __app_id = "komuni-moses";
+  const __firebase_config = JSON.stringify({
+    apiKey: "AIzaSyAbOpS4Pt-ADFCnzle1uCt1DWPp9saFsRM",
+    authDomain: "komuni-moses.firebaseapp.com",
+    projectId: "komuni-moses",
+    storageBucket: "komuni-moses.appspot.com",
+    messagingSenderId: "97500198342",
+    appId: "1:97500198342:web:63a96e072a72d9f9ab6ec7",
+    measurementId: "G-7VZPSSMY6F"
+  });
+</script>
+
+<script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, collection, query, where, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Global variables for Firebase
-        const firebaseConfig = {
-  apiKey: "AIzaSyAbOpS4Pt-ADFCnzle1uCt1DWPp9saFsRM",
-  authDomain: "komuni-moses.firebaseapp.com",
-  projectId: "komuni-moses",
-  storageBucket: "komuni-moses.firebasestorage.app",
-  messagingSenderId: "97500198342",
-  appId: "1:97500198342:web:63a96e072a72d9f9ab6ec7",
-  measurementId: "G-7VZPSSMY6F"
-};
+        let app;
+        let db;
+        let auth;
+        let userId;
+        let appId;
+        let isAuthReady = false;
 
         // Function to show a custom modal message
         function showModal(message) {
