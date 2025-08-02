@@ -1,17 +1,705 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Undangan Komuni - Moses</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Undangan Komuni Pertama - Moses Prodigio Pajar</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth; /* Smooth scrolling for anchor links */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #A0C49D; /* Sage Green */
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8aa789;
+        }
+
+        /* Parallax effect for hero image */
+        .parallax-bg {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        /* Fade-in on scroll effect */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in.appear {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Elegant border for sections */
+        .section-border {
+            position: relative;
+            padding: 2rem 0;
+        }
+        .section-border::before,
+        .section-border::after {
+            content: '';
+            position: absolute;
+            background-color: #A0C49D; /* Sage Green */
+            border-radius: 50%;
+            opacity: 0.3;
+            z-index: -1;
+        }
+        .section-border::before {
+            width: 150px;
+            height: 150px;
+            top: -75px;
+            left: -75px;
+        }
+        .section-border::after {
+            width: 100px;
+            height: 100px;
+            bottom: -50px;
+            right: -50px;
+        }
+
+        /* Custom modal styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border-radius: 12px;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
-<body>
-  <audio autoplay loop>
-    <source src="https://www.bensound.com/bensound-music/bensound-tenderness.mp3" type="audio/mpeg">
-    Browser Anda tidak mendukung elemen audio.
-  </audio>
-  <h1>Selamat datang di Undangan Komuni Moses</h1>
-  <p>Musik latar akan diputar otomatis.</p>
+<body class="bg-gray-50 text-gray-800">
+    <!-- Firebase SDKs -->
+    
+<script>
+  const __app_id = "komuni-moses";
+  const __firebase_config = JSON.stringify({
+    apiKey: "AIzaSyAbOpS4Pt-ADFCnzle1uCt1DWPp9saFsRM",
+    authDomain: "komuni-moses.firebaseapp.com",
+    projectId: "komuni-moses",
+    storageBucket: "komuni-moses.appspot.com",
+    messagingSenderId: "97500198342",
+    appId: "1:97500198342:web:63a96e072a72d9f9ab6ec7",
+    measurementId: "G-7VZPSSMY6F"
+  });
+</script>
+
+<script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, collection, query, where, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global variables for Firebase
+        let app;
+        let db;
+        let auth;
+        let userId;
+        let appId;
+        let isAuthReady = false;
+
+        // Function to show a custom modal message
+        function showModal(message) {
+            const modal = document.getElementById('myModal');
+            const modalMessage = document.getElementById('modalMessage');
+            modalMessage.textContent = message;
+            modal.style.display = 'flex'; // Use flex to center content
+        }
+
+        // Function to close the custom modal
+        window.closeModal = function() { // Made globally accessible
+            const modal = document.getElementById('myModal');
+            modal.style.display = 'none';
+        }
+
+        // Initialize Firebase and Auth
+        async function initializeFirebase() {
+            try {
+                // Ensure __app_id and __firebase_config are defined
+                appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+                const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+
+                if (Object.keys(firebaseConfig).length === 0) {
+                    showModal('Firebase configuration is missing. Data persistence will not work.');
+                    return;
+                }
+
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                // Sign in with custom token or anonymously
+                if (typeof __initial_auth_token !== 'undefined') {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        isAuthReady = true;
+                        console.log("Firebase initialized and user authenticated:", userId);
+                        // Display userId on the UI for multi-user apps
+                        const userIdDisplay = document.getElementById('userIdDisplay');
+                        if (userIdDisplay) {
+                            userIdDisplay.textContent = `User ID: ${userId}`;
+                        }
+                        // Start listening to guestbook messages after auth is ready
+                        setupGuestbookListener();
+                    } else {
+                        userId = crypto.randomUUID(); // Fallback for unauthenticated users
+                        isAuthReady = true;
+                        console.log("Firebase initialized, signed in anonymously or no user:", userId);
+                        const userIdDisplay = document.getElementById('userIdDisplay');
+                        if (userIdDisplay) {
+                            userIdDisplay.textContent = `User ID: ${userId} (Anon)`;
+                        }
+                        setupGuestbookListener(); // Still listen, but write access might be limited by rules
+                    }
+                });
+
+            } catch (error) {
+                console.error("Error initializing Firebase or signing in:", error);
+                showModal("Failed to initialize Firebase. Data persistence may not work. Error: " + error.message);
+            }
+        }
+
+        // Function to add RSVP
+        window.submitRsvp = async function() {
+            if (!isAuthReady || !db || !userId) {
+                showModal("Firebase is not ready. Please try again in a moment.");
+                return;
+            }
+
+            const name = document.getElementById('rsvpName').value;
+            const attendance = document.getElementById('rsvpAttendance').value;
+            const message = document.getElementById('rsvpMessage').value;
+
+            if (!name || !attendance) {
+                showModal("Nama dan Kehadiran wajib diisi.");
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, `artifacts/${appId}/public/data/rsvps`), {
+                    name: name,
+                    attendance: attendance,
+                    message: message,
+                    timestamp: serverTimestamp(),
+                    userId: userId
+                });
+                showModal("RSVP Anda berhasil dikirim! Terima kasih.");
+                document.getElementById('rsvpForm').reset();
+            } catch (e) {
+                console.error("Error adding RSVP document: ", e);
+                showModal("Gagal mengirim RSVP. Silakan coba lagi. Error: " + e.message);
+            }
+        };
+
+        // Function to add Guestbook message
+        window.submitGuestbook = async function() {
+            if (!isAuthReady || !db || !userId) {
+                showModal("Firebase is not ready. Please try again in a moment.");
+                return;
+            }
+
+            const guestName = document.getElementById('guestName').value;
+            const guestMessage = document.getElementById('guestMessage').value;
+
+            if (!guestName || !guestMessage) {
+                showModal("Nama dan Ucapan wajib diisi.");
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, `artifacts/${appId}/public/data/guestbook`), {
+                    name: guestName,
+                    message: guestMessage,
+                    timestamp: serverTimestamp(),
+                    userId: userId
+                });
+                showModal("Ucapan Anda berhasil dikirim! Terima kasih.");
+                document.getElementById('guestbookForm').reset();
+            } catch (e) {
+                console.error("Error adding guestbook document: ", e);
+                showModal("Gagal mengirim ucapan. Silakan coba lagi. Error: " + e.message);
+            }
+        };
+
+        // Listen for real-time guestbook updates
+        function setupGuestbookListener() {
+            if (!db || !appId) {
+                console.warn("Firestore or App ID not available for guestbook listener.");
+                return;
+            }
+            const q = query(collection(db, `artifacts/${appId}/public/data/guestbook`));
+            onSnapshot(q, (snapshot) => {
+                const messages = [];
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    messages.push({ id: doc.id, ...data });
+                });
+                displayGuestbookMessages(messages);
+            }, (error) => {
+                console.error("Error listening to guestbook messages:", error);
+                showModal("Gagal memuat ucapan tamu. Error: " + error.message);
+            });
+        }
+
+        // Display guestbook messages
+        function displayGuestbookMessages(messages) {
+            const guestbookContainer = document.getElementById('guestbookMessages');
+            guestbookContainer.innerHTML = ''; // Clear previous messages
+
+            // Sort messages by timestamp descending
+            messages.sort((a, b) => (b.timestamp?.toDate() || 0) - (a.timestamp?.toDate() || 0));
+
+            if (messages.length === 0) {
+                guestbookContainer.innerHTML = '<p class="text-gray-600 text-center">Belum ada ucapan. Jadilah yang pertama!</p>';
+                return;
+            }
+
+            messages.forEach(msg => {
+                const messageElement = document.createElement('div');
+                messageElement.className = 'bg-white p-4 rounded-lg shadow-sm mb-4 border border-gray-200';
+                const date = msg.timestamp ? new Date(msg.timestamp.seconds * 1000).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }) : 'Tanggal tidak diketahui';
+                messageElement.innerHTML = `
+                    <p class="font-semibold text-lg text-gray-900">${msg.name}</p>
+                    <p class="text-sm text-gray-500 mb-2">${date}</p>
+                    <p class="text-gray-700">${msg.message}</p>
+                `;
+                guestbookContainer.appendChild(messageElement);
+            });
+        }
+
+        // Initialize Firebase when the window loads
+        window.addEventListener('load', initializeFirebase);
+    </script>
+
+    <!-- Custom Modal for Alerts/Confirmations -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <p id="modalMessage" class="text-lg font-medium text-gray-800"></p>
+            <button onclick="closeModal()" class="mt-4 px-6 py-2 bg-sage-green text-white rounded-full hover:bg-opacity-90 transition-colors">OK</button>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="fixed top-0 left-0 right-0 bg-white bg-opacity-90 shadow-lg z-50 p-4 transition-all duration-300 ease-in-out">
+        <div class="container mx-auto flex justify-between items-center px-4">
+            <a href="#hero" class="text-xl font-bold text-sage-green-dark hover:text-sage-green transition-colors">Moses</a>
+            <div class="hidden md:flex space-x-6">
+                <a href="#acara" class="text-gray-700 hover:text-sage-green transition-colors">Acara</a>
+                <a href="#cerita" class="text-gray-700 hover:text-sage-green transition-colors">Cerita</a>
+                <a href="#galeri" class="text-gray-700 hover:text-sage-green transition-colors">Galeri</a>
+                <a href="#ucapan" class="text-gray-700 hover:text-sage-green transition-colors">Ucapan</a>
+            </div>
+            <button id="menu-button" class="md:hidden text-gray-700 focus:outline-none">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden mt-4 space-y-2 px-4 pb-2">
+            <a href="#acara" class="block text-gray-700 hover:text-sage-green transition-colors py-2">Acara</a>
+            <a href="#cerita" class="block text-gray-700 hover:text-sage-green transition-colors py-2">Cerita</a>
+            <a href="#galeri" class="block text-gray-700 hover:text-sage-green transition-colors py-2">Galeri</a>
+            <a href="#ucapan" class="block text-gray-700 hover:text-sage-green transition-colors py-2">Ucapan</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="relative h-screen flex items-center justify-center text-white text-center parallax-bg" style="background-image: url('https://placehold.co/1200x800/A0C49D/FFFFFF?text=Hero+Image+Moses');">
+        <div class="absolute inset-0 bg-black/50"></div>
+        <div class="relative z-10 p-6 max-w-2xl mx-auto fade-in">
+            <h1 class="text-4xl md:text-6xl font-bold mb-4 drop-shadow-lg">Undangan Komuni Pertama</h1>
+            <p class="text-2xl md:text-4xl font-semibold mb-6 drop-shadow-lg">Moses Prodigio Pajar</p>
+            <p class="text-lg md:text-xl mb-8 drop-shadow-lg">"Akulah Roti Hidup"</p>
+            <button id="open-music-modal" class="px-8 py-3 bg-white text-sage-green-dark rounded-full text-lg font-semibold shadow-lg hover:bg-gray-100 transition-all duration-300 ease-in-out transform hover:scale-105">
+                <i class="fas fa-music mr-2"></i> Putar Musik
+            </button>
+        </div>
+    </section>
+
+    <!-- Countdown Timer Section -->
+    <section id="countdown" class="py-16 bg-sage-green text-white text-center shadow-inner fade-in section-border">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold mb-8">Menghitung Mundur Menuju Hari Istimewa</h2>
+            <div id="countdown-timer" class="flex justify-center space-x-4 md:space-x-8 text-4xl md:text-5xl font-bold">
+                <div class="flex flex-col items-center">
+                    <span id="days">00</span>
+                    <span class="text-base md:text-lg font-medium">Hari</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <span id="hours">00</span>
+                    <span class="text-base md:text-lg font-medium">Jam</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <span id="minutes">00</span>
+                    <span class="text-base md:text-lg font-medium">Menit</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <span id="seconds">00</span>
+                    <span class="text-base md:text-lg font-medium">Detik</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Acara Section -->
+    <section id="acara" class="py-16 bg-gray-50 text-gray-800 fade-in section-border">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-sage-green-dark">Detail Acara</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <!-- Komuni Section -->
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-200 transform hover:scale-105 transition-transform duration-300 ease-in-out">
+                    <h3 class="text-2xl md:text-3xl font-bold mb-6 text-center text-sage-green">Acara Komuni</h3>
+                    <div class="space-y-4 text-center">
+                        <p class="text-lg flex items-center justify-center"><i class="far fa-calendar-alt text-sage-green mr-3"></i> 13 September 2025</p>
+                        <p class="text-lg flex items-center justify-center"><i class="far fa-clock text-sage-green mr-3"></i> 08:00 WITA</p>
+                        <p class="text-lg flex items-center justify-center"><i class="fas fa-church text-sage-green mr-3"></i> Gereja St. Mikael Katedral</p>
+                        <p class="text-gray-600 text-sm italic">Mohon doa restu untuk Moses dalam menerima Sakramen Komuni Pertamanya.</p>
+                    </div>
+                </div>
+
+                <!-- Resepsi Section -->
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-200 transform hover:scale-105 transition-transform duration-300 ease-in-out">
+                    <h3 class="text-2xl md:text-3xl font-bold mb-6 text-center text-sage-green">Acara Resepsi</h3>
+                    <div class="space-y-4 text-center">
+                        <p class="text-lg flex items-center justify-center"><i class="far fa-calendar-alt text-sage-green mr-3"></i> 13 September 2025</p>
+                        <p class="text-lg flex items-center justify-center"><i class="far fa-clock text-sage-green mr-3"></i> 12:00 WITA</p>
+                        <p class="text-lg flex items-center justify-center text-wrap"><i class="fas fa-map-marker-alt text-sage-green mr-3"></i> Jl. Jati Putih Gg. Wae Liba Desa Batu Cermin</p>
+                        <p class="text-gray-600 text-sm italic">Kehadiran Anda adalah sukacita bagi kami.</p>
+                    </div>
+                    <div class="mt-8">
+                        <h4 class="text-xl font-semibold mb-4 text-center text-sage-green-dark">Lokasi Resepsi</h4>
+                        <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden shadow-md">
+                            <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3945.727582522035!2d120.40726197500001!3d-8.599728991444158!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2db46811a9161a4f%3A0x705d105c31752b0!2sJl.%20Jati%20Putih%20Gg.%20Wae%20Liba%2C%20Batu%20Cermin%2C%20Kec.%20Komodo%2C%20Kabupaten%20Manggarai%20Barat%2C%20Nusa%20Tenggara%20Timur!5e0!3m2!1sid!2sid!4v1701388800000!5m2!1sid!2sid"
+                                width="100%"
+                                height="450"
+                                style="border:0;"
+                                allowfullscreen=""
+                                loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade"
+                            ></iframe>
+                        </div>
+                        <a href="https://maps.app.goo.gl/YourGoogleMapsLink" target="_blank" class="block mt-4 text-center text-sage-green-dark hover:underline font-medium">Buka di Google Maps</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cerita Singkat Komuni Section -->
+    <section id="cerita" class="py-16 bg-sage-green text-white text-center fade-in section-border">
+        <div class="container mx-auto px-4 max-w-3xl">
+            <h2 class="text-3xl md:text-4xl font-bold mb-8">Cerita Singkat Komuni</h2>
+            <p class="text-lg md:text-xl leading-relaxed">
+                "Akulah Roti Hidup" (Yohanes 6:35). Kalimat ini menjadi dasar iman bagi Moses dalam menerima Sakramen Komuni Pertamanya. Ini adalah momen sakral di mana ia akan menerima Tubuh dan Darah Kristus untuk pertama kalinya, menjadi satu dengan-Nya dalam Ekaristi Kudus. Perjalanan iman Moses dimulai, dan kami bersyukur atas berkat ini.
+            </p>
+        </div>
+    </section>
+
+    <!-- Galeri Foto Section -->
+    <section id="galeri" class="py-16 bg-gray-50 text-gray-800 fade-in section-border">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-sage-green-dark">Galeri Foto Moses</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <div class="relative overflow-hidden rounded-lg shadow-md group">
+                    <img src="https://placehold.co/400x300/A0C49D/FFFFFF?text=Galeri+Foto+1" alt="Foto Moses 1" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p class="text-white text-lg font-semibold">Senyum Ceria</p>
+                    </div>
+                </div>
+                <div class="relative overflow-hidden rounded-lg shadow-md group">
+                    <img src="https://placehold.co/400x300/A0C49D/FFFFFF?text=Galeri+Foto+2" alt="Foto Moses 2" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p class="text-white text-lg font-semibold">Momen Indah</p>
+                    </div>
+                </div>
+                <div class="relative overflow-hidden rounded-lg shadow-md group">
+                    <img src="https://placehold.co/400x300/A0C49D/FFFFFF?text=Galeri+Foto+3" alt="Foto Moses 3" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p class="text-white text-lg font-semibold">Penuh Berkat</p>
+                    </div>
+                </div>
+                <div class="relative overflow-hidden rounded-lg shadow-md group">
+                    <img src="https://placehold.co/400x300/A0C49D/FFFFFF?text=Galeri+Foto+4" alt="Foto Moses 4" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p class="text-white text-lg font-semibold">Persiapan</p>
+                    </div>
+                </div>
+                <div class="relative overflow-hidden rounded-lg shadow-md group">
+                    <img src="https://placehold.co/400x300/A0C49D/FFFFFF?text=Galeri+Foto+5" alt="Foto Moses 5" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p class="text-white text-lg font-semibold">Harapan</p>
+                    </div>
+                </div>
+                <div class="relative overflow-hidden rounded-lg shadow-md group">
+                    <img src="https://placehold.co/400x300/A0C49D/FFFFFF?text=Galeri+Foto+6" alt="Foto Moses 6" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p class="text-white text-lg font-semibold">Sukacita</p>
+                    </div>
+                </div>
+            </div>
+            <p class="text-center text-sm text-gray-500 mt-8">
+                <i class="fas fa-info-circle mr-2"></i> Mohon ganti URL gambar placeholder ini dengan URL gambar asli Moses.
+            </p>
+        </div>
+    </section>
+
+    <!-- RSVP Form Section -->
+    <section id="rsvp" class="py-16 bg-sage-green text-white fade-in section-border">
+        <div class="container mx-auto px-4 max-w-2xl">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-8">Konfirmasi Kehadiran</h2>
+            <p class="text-center text-lg mb-8">Mohon konfirmasi kehadiran Anda untuk acara resepsi.</p>
+            <form id="rsvpForm" class="bg-white p-8 rounded-xl shadow-lg text-gray-800">
+                <div class="mb-6">
+                    <label for="rsvpName" class="block text-gray-700 text-sm font-bold mb-2">Nama Lengkap:</label>
+                    <input type="text" id="rsvpName" name="name" required class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-sage-green transition-all duration-200">
+                </div>
+                <div class="mb-6">
+                    <label for="rsvpAttendance" class="block text-gray-700 text-sm font-bold mb-2">Konfirmasi Kehadiran:</label>
+                    <select id="rsvpAttendance" name="attendance" required class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-sage-green transition-all duration-200">
+                        <option value="">Pilih Opsi</option>
+                        <option value="hadir">Akan Hadir</option>
+                        <option value="tidak-hadir">Tidak Dapat Hadir</option>
+                    </select>
+                </div>
+                <div class="mb-6">
+                    <label for="rsvpMessage" class="block text-gray-700 text-sm font-bold mb-2">Pesan (Opsional):</label>
+                    <textarea id="rsvpMessage" name="message" rows="4" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-sage-green transition-all duration-200"></textarea>
+                </div>
+                <div class="flex items-center justify-center">
+                    <button type="button" onclick="submitRsvp()" class="bg-sage-green text-white font-bold py-3 px-6 rounded-full hover:bg-opacity-90 transition-all duration-300 ease-in-out transform hover:scale-105 shadow-md">
+                        Kirim Konfirmasi
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Ucapan Tamu Section -->
+    <section id="ucapan" class="py-16 bg-gray-50 text-gray-800 fade-in section-border">
+        <div class="container mx-auto px-4 max-w-3xl">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 text-sage-green-dark">Ucapan & Doa</h2>
+            <p class="text-center text-lg mb-8">"Akulah Roti Hidup" - Silakan tinggalkan ucapan dan doa terbaik Anda untuk Moses.</p>
+
+            <form id="guestbookForm" class="bg-white p-8 rounded-xl shadow-lg mb-12 border border-gray-200">
+                <div class="mb-6">
+                    <label for="guestName" class="block text-gray-700 text-sm font-bold mb-2">Nama Anda:</label>
+                    <input type="text" id="guestName" name="guestName" required class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-sage-green transition-all duration-200">
+                </div>
+                <div class="mb-6">
+                    <label for="guestMessage" class="block text-gray-700 text-sm font-bold mb-2">Ucapan/Doa:</label>
+                    <textarea id="guestMessage" name="guestMessage" rows="5" required class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-sage-green transition-all duration-200"></textarea>
+                </div>
+                <div class="flex items-center justify-center">
+                    <button type="button" onclick="submitGuestbook()" class="bg-sage-green text-white font-bold py-3 px-6 rounded-full hover:bg-opacity-90 transition-all duration-300 ease-in-out transform hover:scale-105 shadow-md">
+                        Kirim Ucapan
+                    </button>
+                </div>
+            </form>
+
+            <h3 class="text-2xl font-bold text-center mb-6 text-sage-green-dark">Ucapan dari Para Tamu</h3>
+            <div id="guestbookMessages" class="space-y-4">
+                <!-- Messages will be loaded here by JavaScript -->
+                <p class="text-gray-600 text-center">Memuat ucapan...</p>
+            </div>
+            <div id="userIdDisplay" class="text-xs text-gray-500 text-center mt-8"></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-sage-green-dark text-white py-8 text-center">
+        <div class="container mx-auto px-4">
+            <p>&copy; 2025 Undangan Komuni Pertama Moses Prodigio Pajar. Dibuat dengan cinta.</p>
+        </div>
+    </footer>
+
+    <!-- Music Player Modal -->
+    <div id="musicModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="window.closeMusicModal()">&times;</span>
+            <h3 class="text-xl font-bold mb-4 text-sage-green-dark">Musik Latar</h3>
+            <p class="text-gray-700 mb-4">Putar musik untuk menambah suasana.</p>
+            <!-- SoundCloud Embed Player -->
+            <iframe
+                width="100%"
+                height="166"
+                scrolling="no"
+                frameborder="no"
+                allow="autoplay"
+                src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/trending-music-id/sets/electronic&color=%23A0C49D&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"
+            ></iframe>
+            <p class="text-sm text-gray-500 mt-4">
+                <i class="fas fa-info-circle mr-1"></i> Anda dapat mengganti link SoundCloud ini dengan playlist atau lagu pilihan Anda.
+            </p>
+        </div>
+    </div>
+
+
+    <script>
+        // Tailwind CSS Customization (Sage Green Palette)
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'sage-green': {
+                            DEFAULT: '#A0C49D', // Base Sage Green
+                            'light': '#C4D7B2',
+                            'dark': '#6B8E6F',
+                        },
+                    },
+                },
+            },
+        };
+
+        // Countdown Timer Logic
+        const communionDate = new Date("2025-09-13T08:00:00").getTime();
+
+        const updateCountdown = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = communionDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerHTML = String(days).padStart(2, '0');
+            document.getElementById("hours").innerHTML = String(hours).padStart(2, '0');
+            document.getElementById("minutes").innerHTML = String(minutes).padStart(2, '0');
+            document.getElementById("seconds").innerHTML = String(seconds).padStart(2, '0');
+
+            if (distance < 0) {
+                clearInterval(updateCountdown);
+                document.getElementById("countdown-timer").innerHTML = "<p class='text-2xl'>Acara telah dimulai!</p>";
+            }
+        }, 1000);
+
+        // Mobile Menu Toggle
+        const menuButton = document.getElementById('menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        menuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when a link is clicked
+        const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+        mobileMenuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Parallax Effect for Hero Section
+        const heroSection = document.getElementById('hero');
+        window.addEventListener('scroll', () => {
+            const scrollPosition = window.pageYOffset;
+            heroSection.style.backgroundPositionY = -scrollPosition * 0.3 + 'px'; // Adjust 0.3 for speed
+        });
+
+        // Fade-in on Scroll Animation
+        const fadeInElements = document.querySelectorAll('.fade-in');
+
+        const observerOptions = {
+            root: null, // relative to the viewport
+            rootMargin: '0px',
+            threshold: 0.1 // 10% of the element must be visible
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('appear');
+                    observer.unobserve(entry.target); // Stop observing once it's visible
+                }
+            });
+        }, observerOptions);
+
+        fadeInElements.forEach(element => {
+            observer.observe(element);
+        });
+
+        // Music Player Modal Logic
+        const musicModal = document.getElementById('musicModal');
+        const openMusicModalBtn = document.getElementById('open-music-modal');
+        // The close button for music modal is now globally accessible via window.closeMusicModal
+
+        openMusicModalBtn.addEventListener('click', () => {
+            musicModal.style.display = 'flex';
+        });
+
+        window.closeMusicModal = function() { // Made globally accessible
+            musicModal.style.display = 'none';
+        }
+
+        // Close modal if clicked outside content
+        window.addEventListener('click', (event) => {
+            if (event.target == musicModal) {
+                window.closeMusicModal();
+            }
+            if (event.target == document.getElementById('myModal')) {
+                window.closeModal();
+            }
+        });
+
+        // Custom modal close button event listener
+        document.getElementById('myModal').querySelector('.close-button').addEventListener('click', window.closeModal);
+
+    </script>
 </body>
 </html>
