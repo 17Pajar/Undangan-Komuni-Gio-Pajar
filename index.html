@@ -379,24 +379,49 @@
 </footer>
 <!-- Music Player Modal -->
 <div class="modal" id="musicModal">
-<div class="modal-content">
-<span class="close-button" onclick="window.closeMusicModal()">×</span>
-<h3 class="text-xl font-bold mb-4 text-sage-green-dark">Musik Latar</h3>
-<p class="text-gray-700 mb-4">
-                Musik latar akan diputar secara otomatis (tetapi mungkin dalam keadaan **mute** karena kebijakan browser). Silakan klik tombol "Unmute" jika musik tidak bersuara.
-            </p>
-<!-- Audio Player -->
-<audio autoplay="" id="backgroundMusic" loop="" muted="">
-<!-- GANTI URL INI DENGAN LINK LANGSUNG KE FILE MP3 ANDA YANG DIHOSTING PUBLIK -->
-<source src="instrumen.mp3" type="audio/mpeg"/>
-                Browser Anda tidak mendukung elemen audio.
-            </audio>
-<button class="mt-4 px-6 py-2 bg-sage-green text-white rounded-full hover:bg-opacity-90 transition-colors" id="unmuteButton">
-<i class="fas fa-volume-up mr-2"></i> Unmute
-            </button>
+  <div class="modal-content">
+    <span class="close-button" onclick="window.closeMusicModal()">×</span>
+    <h3 class="text-xl font-bold mb-4 text-sage-green-dark">Musik Latar</h3>
+    <p class="text-gray-700 mb-4">
+      Musik latar diputar otomatis, tetapi mungkin dalam keadaan <b>mute</b> karena kebijakan browser.
+      Silakan klik tombol di bawah untuk menyalakan suara.
+    </p>
+
+    <!-- Audio Player -->
+    <audio id="backgroundMusic" autoplay loop muted>
+      <!-- Ganti src dengan link MP3 yang benar-benar bisa diakses publik -->
+      <source src="instrumen.mp3" type="audio/mpeg" />
+      Browser Anda tidak mendukung elemen audio.
+    </audio>
+
+    <!-- Tombol kontrol musik -->
+    <button id="unmuteButton"
+      class="mt-4 px-6 py-2 bg-sage-green text-white rounded-full hover:bg-opacity-90 transition-colors">
+      <i class="fas fa-volume-up mr-2"></i> Putar Musik
+    </button>
+  </div>
 </div>
-</div>
+
 <script>
+  const audio = document.getElementById("backgroundMusic");
+  const unmuteButton = document.getElementById("unmuteButton");
+
+  // Saat tombol diklik, unmute dan mainkan musik
+  unmuteButton.addEventListener("click", () => {
+    audio.muted = false;
+    audio.play();
+    unmuteButton.innerHTML = '<i class="fas fa-volume-mute mr-2"></i> Pause Musik';
+    unmuteButton.onclick = () => {
+      if (!audio.paused) {
+        audio.pause();
+        unmuteButton.innerHTML = '<i class="fas fa-play mr-2"></i> Lanjutkan Musik';
+      } else {
+        audio.play();
+        unmuteButton.innerHTML = '<i class="fas fa-volume-mute mr-2"></i> Pause Musik';
+      }
+    };
+  });
+</script>
 
         // Tailwind CSS Customization (Sage Green Palette)
         tailwind.config = {
