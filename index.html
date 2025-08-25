@@ -501,13 +501,7 @@
 </div>
 </div>
 <script>
-<script>
-  const urlParams = new URLSearchParams(window.location.search);
-  const guestName = urlParams.get('tamu');
-  if (guestName) {
-    document.getElementById("guestNameDisplay").textContent = `Kepada Yth: ${guestName}`;
-  }
-</script>
+
         // Tailwind CSS Customization (Sage Green Palette)
         tailwind.config = {
             theme: {
@@ -648,12 +642,13 @@
 
     </script>
 
-<script>
-  const urlParams = new URLSearchParams(window.location.search);
-  const guestName = urlParams.get('tamu');
-  if (guestName) {
-    document.getElementById("guestNameDisplay").textContent = `Kepada Yth: ${guestName}`;
-  }
-</script>
+<!-- Script untuk Nama Tamu -->
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const guestName = urlParams.get('tamu');
+    if (guestName) {
+      document.getElementById("guestNameDisplay").textContent = `Kepada Yth: ${guestName}`;
+    }
+  </script>
 </body>
 </html>
