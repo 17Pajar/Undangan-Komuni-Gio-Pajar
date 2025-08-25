@@ -538,12 +538,13 @@
 
     </script>
 
-<script>
-  const urlParams = new URLSearchParams(window.location.search);
-  const guestName = urlParams.get('tamu');
-  if (guestName) {
-    document.getElementById("guestNameDisplay").textContent = `Kepada Yth: ${guestName}`;
-  }
-</script>
+<!-- ================= SCRIPT TAMU ================= -->
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const guestName = urlParams.get('tamu');
+    if (guestName) {
+      document.getElementById("guestNameDisplay").textContent = `Kepada Yth: ${guestName}`;
+    }
+  </script>
 </body>
 </html>
