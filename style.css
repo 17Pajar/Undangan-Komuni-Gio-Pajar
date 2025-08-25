@@ -1,0 +1,16 @@
+<style>
+  /* Style umum untuk background */
+  .parallax-bg {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* efek parallax di laptop/PC */
+  }
+
+  /* Untuk layar kecil (HP) */
+  @media (max-width: 768px) {
+    .parallax-bg {
+      background-attachment: scroll; /* supaya tidak bug di HP */
+    }
+  }
+</style>
