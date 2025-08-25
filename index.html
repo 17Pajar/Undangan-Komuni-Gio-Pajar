@@ -294,6 +294,143 @@
       musicModal.style.display = 'none';
     };
   </script>
+<!-- Firebase SDKs -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+  import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+  import {
+    getFirestore,
+    collection,
+    addDoc,
+    serverTimestamp,
+    onSnapshot,
+    query
+  } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
+  const appId = "komuni-moses"; // ⚠️ Gantilah jika berbeda
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAbOpS4Pt-ADFCnzle1uCt1DWPp9saFsRM",
+    authDomain: "komuni-moses.firebaseapp.com",
+    projectId: "komuni-moses",
+    storageBucket: "komuni-moses.appspot.com",
+    messagingSenderId: "97500198342",
+    appId: "1:97500198342:web:63a96e072a72d9f9ab6ec7",
+    measurementId: "G-7VZPSSMY6F"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  let userId = null;
+
+  function showModal(message) {
+    const modal = document.getElementById('myModal');
+    const modalMessage = document.getElementById('modalMessage');
+    modalMessage.textContent = message;
+    modal.style.display = 'flex';
+  }
+
+  window.closeModal = function () {
+    document.getElementById('myModal').style.display = 'none';
+  };
+
+  function setupGuestbookListener() {
+    const q = query(collection(db, `artifacts/${appId}/public/data/guestbook`));
+    onSnapshot(q, (snapshot) => {
+      const messages = [];
+      snapshot.forEach(doc => {
+        messages.push({ id: doc.id, ...doc.data() });
+      });
+      displayGuestbookMessages(messages);
+    }, (error) => {
+      showModal("Gagal memuat ucapan tamu: " + error.message);
+    });
+  }
+
+  function displayGuestbookMessages(messages) {
+    const guestbookContainer = document.getElementById('guestbookMessages');
+    guestbookContainer.innerHTML = '';
+
+    messages.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+
+    if (messages.length === 0) {
+      guestbookContainer.innerHTML = '<p class="text-gray-600 text-center">Belum ada ucapan. Jadilah yang pertama!</p>';
+      return;
+    }
+
+    messages.forEach(msg => {
+      const el = document.createElement('div');
+      el.className = 'bg-white p-4 rounded-lg shadow-sm mb-4 border border-gray-200';
+      const date = msg.timestamp ? new Date(msg.timestamp.seconds * 1000).toLocaleString('id-ID') : 'Waktu tidak diketahui';
+      el.innerHTML = `
+        <p class="font-semibold text-lg">${msg.name}</p>
+        <p class="text-sm text-gray-500">${date}</p>
+        <p class="text-gray-700">${msg.message}</p>
+      `;
+      guestbookContainer.appendChild(el);
+    });
+  }
+
+  window.submitRsvp = async function () {
+    const name = document.getElementById('rsvpName').value;
+    const attendance = document.getElementById('rsvpAttendance').value;
+    const message = document.getElementById('rsvpMessage').value;
+
+    if (!name || !attendance) {
+      showModal("Nama dan Kehadiran wajib diisi.");
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, `artifacts/${appId}/public/data/rsvps`), {
+        name,
+        attendance,
+        message,
+        userId,
+        timestamp: serverTimestamp()
+      });
+      showModal("RSVP berhasil dikirim!");
+      document.getElementById('rsvpForm').reset();
+    } catch (e) {
+      showModal("Gagal mengirim RSVP: " + e.message);
+    }
+  };
+
+  window.submitGuestbook = async function () {
+    const name = document.getElementById('guestName').value;
+    const message = document.getElementById('guestMessage').value;
+
+    if (!name || !message) {
+      showModal("Nama dan Ucapan wajib diisi.");
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, `artifacts/${appId}/public/data/guestbook`), {
+        name,
+        message,
+        userId,
+        timestamp: serverTimestamp()
+      });
+      showModal("Ucapan berhasil dikirim!");
+      document.getElementById('guestbookForm').reset();
+    } catch (e) {
+      showModal("Gagal mengirim ucapan: " + e.message);
+    }
+  };
+
+  window.addEventListener("load", async () => {
+    try {
+      const result = await signInAnonymously(auth);
+      userId = result.user.uid;
+      console.log("Signed in as", userId);
+      setupGuestbookListener();
+    } catch (e) {
+      showModal("Gagal masuk ke Firebase: " + e.message);
+    }
+  });
+</script>
 </body>
 </html>
