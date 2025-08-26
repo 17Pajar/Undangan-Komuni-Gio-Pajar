@@ -29,6 +29,7 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
+  /* Pastikan elemen ini memiliki background-image yang diatur di HTML atau melalui CSS lain */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -60,7 +61,8 @@ body {
   top: 0;
   bottom: 0;
   width: var(--frame-width-desktop); /* Menggunakan variabel */
-  background: url('songke.png') repeat-y center/cover; /* Pastikan path gambar benar */
+  /* --- PENTING: Periksa jalur gambar ini! --- */
+  background: url('songke.png') repeat-y center/cover;
   z-index: 50;
 }
 
@@ -89,10 +91,7 @@ body {
   z-index: 1000;
   transition: transform 0.3s ease, opacity 0.3s ease;
   animation: pulse 2s infinite;
-  /* Pastikan tombol ini memiliki gaya visual (background, padding, border-radius)
-     agar terlihat seperti tombol dan bisa diklik. */
   background-color: #f0f0f0; /* Contoh: Tambahkan warna latar belakang */
-  border-radius: 50%; /* Contoh: Jadikan bulat */
   padding: 10px; /* Contoh: Beri jarak */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Contoh: Tambahkan bayangan */
   display: flex; /* Contoh: Untuk menengahkan ikon jika ada */
@@ -132,39 +131,45 @@ body {
   .cover,
   .slide {
     background-attachment: scroll; /* Perbaiki bug paralaks di HP */
+    /* --- PENTING: Untuk gambar background, 'contain' atau 'cover'? --- */
+    /* 'contain' akan menampilkan seluruh gambar (mungkin ada ruang kosong) */
+    /* 'cover' akan mengisi seluruh area (mungkin ada bagian gambar terpotong) */
+    background-size: contain;
   }
 }
 
 /* ===== COVER SECTION ===== */
 #cover {
-  min-height: 100vh; /* Pastikan cover juga memenuhi viewport */
+  min-height: 100vh;
   position: relative;
+  /* Pastikan elemen ini memiliki background-image yang diatur di HTML atau melalui CSS lain */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  display: flex; /* Tambahkan flexbox untuk centering konten */
+  display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  color: white; /* Asumsi teks di cover berwarna putih */
-  overflow: hidden; /* Penting untuk menjaga konten di dalam batas */
+  color: white; /* Warna teks default untuk konten di #cover */
+  overflow: hidden;
 }
 
 #cover .overlay {
-  position: absolute; /* Penting: agar overlay menutupi seluruh #cover */
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: var(--color-overlay); /* Menggunakan variabel */
-  z-index: 1; /* Di bawah konten, di atas background */
+  background: var(--color-overlay);
+  z-index: 1;
 }
 
 #cover .content {
-  position: relative; /* Penting: agar konten berada di atas overlay */
+  position: relative;
   z-index: 2;
   padding: 20px;
-  max-width: 90%; /* Batasi lebar konten agar tidak terlalu lebar di desktop */
+  max-width: 90%;
+  color: inherit; /* Memastikan warna teks mewarisi dari #cover (putih) */
 }
 
 #cover h1 {
