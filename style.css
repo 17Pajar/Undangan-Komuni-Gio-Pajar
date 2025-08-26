@@ -14,6 +14,7 @@ body {
   font-family: var(--font-primary);
   margin: 0;
   padding: 0;
+  overflow: hidden; /* Mencegah scrolling untuk tampilan per-slide */
   /* Properti background dipindahkan ke elemen spesifik seperti .slide atau #cover */
 }
 
@@ -33,9 +34,13 @@ body {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  width: 100vw; /* Pastikan slide mengambil lebar penuh viewport */
+  /* Untuk transisi antar slide, biasanya memerlukan JavaScript untuk mengelola visibilitas */
+  /* Misalnya, Anda bisa menambahkan properti transisi di sini jika mengelola opacity/transform dengan JS */
+  /* transition: opacity 0.8s ease-in-out; */
 }
 
-/* ===== FADE-IN ANIMATION ===== */
+/* ===== FADE-IN ANIMATION (UNTUK KONTEN DI DALAM SLIDE) ===== */
 .fade-in {
   opacity: 0;
   transform: translateY(20px);
