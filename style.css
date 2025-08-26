@@ -106,3 +106,32 @@ body {
 #cover img {
   animation: fadeInUp 1.2s ease forwards;
 }
+/* Frame Songke kiri dan kanan */
+.frame-songke::before,
+.frame-songke::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 20px; /* ± 5mm */
+  background-image: url('songke-pattern.png');
+  background-size: cover;
+  background-repeat: repeat-y;
+  z-index: 40; /* di atas background, di bawah konten */
+}
+
+.frame-songke::before {
+  left: 0;
+}
+
+.frame-songke::after {
+  right: 0;
+}
+
+/* Pastikan konten tetap responsif */
+body {
+  margin: 0;
+  padding: 0;
+  background-size: cover;
+  background-position: center;
+}
