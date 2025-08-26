@@ -14,7 +14,8 @@ body {
   font-family: var(--font-primary);
   margin: 0;
   padding: 0;
-  overflow: hidden; /* Mencegah scrolling untuk tampilan per-slide */
+  /* overflow: hidden; */ /* Dihapus agar scrolling tetap ada */
+  scroll-snap-type: y mandatory; /* Mengaktifkan scroll-snap vertikal */
   /* Properti background dipindahkan ke elemen spesifik seperti .slide atau #cover */
 }
 
@@ -35,6 +36,7 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   width: 100vw; /* Pastikan slide mengambil lebar penuh viewport */
+  scroll-snap-align: start; /* Mengunci slide di bagian atas viewport saat scrolling */
   /* Untuk transisi antar slide, biasanya memerlukan JavaScript untuk mengelola visibilitas */
   /* Misalnya, Anda bisa menambahkan properti transisi di sini jika mengelola opacity/transform dengan JS */
   /* transition: opacity 0.8s ease-in-out; */
