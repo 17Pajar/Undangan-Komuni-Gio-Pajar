@@ -92,7 +92,7 @@ body {
   /* Pastikan tombol ini memiliki gaya visual (background, padding, border-radius)
      agar terlihat seperti tombol dan bisa diklik. */
   background-color: #f0f0f0; /* Contoh: Tambahkan warna latar belakang */
-  /* border-radius: 50%; */ /* Baris ini dihilangkan untuk menghilangkan bentuk lingkaran */
+  border-radius: 50%; /* Contoh: Jadikan bulat */
   padding: 10px; /* Contoh: Beri jarak */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Contoh: Tambahkan bayangan */
   display: flex; /* Contoh: Untuk menengahkan ikon jika ada */
@@ -132,7 +132,6 @@ body {
   .cover,
   .slide {
     background-attachment: scroll; /* Perbaiki bug paralaks di HP */
-    background-size: contain; /* Memastikan gambar background terlihat seluruhnya di layar HP */
   }
 }
 
