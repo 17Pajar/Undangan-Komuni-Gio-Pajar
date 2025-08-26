@@ -1,13 +1,11 @@
 /* ===== FONT GLOBAL ===== */
 body {
+  font-family: 'Inter', sans-serif;
   margin: 0;
   padding: 0;
-  font-family: 'Inter', sans-serif;
   background-size: cover;
   background-position: center;
-  overflow-x: hidden; /* cegah scroll horizontal */
 }
-
 .font-playfair {
   font-family: 'Playfair Display', serif;
 }
@@ -20,10 +18,12 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 80px 40px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
-/* ===== ANIMASI ===== */
+/* ===== ANIMASI FADE-IN ===== */
 .fade-in {
   opacity: 0;
   transform: translateY(20px);
@@ -36,6 +36,51 @@ body {
   }
 }
 
+/* ===== BINGKAI SONGKE KIRI-KANAN ===== */
+.frame-songke {
+  position: relative;
+}
+
+.frame-songke::before,
+.frame-songke::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+  background: url('songke.png') repeat-y center/cover;
+  z-index: 50;
+}
+
+.frame-songke::before { left: 0; }
+.frame-songke::after { right: 0; }
+
+/* Responsif: HP → bingkai lebih kecil */
+@media (max-width: 768px) {
+  .frame-songke::before,
+  .frame-songke::after {
+    width: 20px;
+    background-size: contain;
+  }
+}
+
+/* ===== TOMBOL MUSIK ===== */
+#musicPlayer {
+  position: fixed;
+  bottom: 20px;
+  right: 50px; /* beri jarak dari bingkai songke */
+  z-index: 1000;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  animation: pulse 2s infinite;
+}
+#musicPlayer:hover { transform: scale(1.1); }
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* ===== ANIMASI BOUNCE UNTUK NAMA TAMU ===== */
 .animate-bounce-slow {
   animation: bounce 3s infinite;
 }
@@ -44,105 +89,56 @@ body {
   50% { transform: translateY(-15px); }
 }
 
-/* ===== FRAME SONGKE ===== */
-.frame-songke::before,
-.frame-songke::after {
-  content: "";
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  width: 20px; /* default di desktop ±5mm */
-  background-image: url('songke-pattern.png');
-  background-size: cover;
-  background-repeat: repeat-y;
-  z-index: 40;
-}
-.frame-songke::before { left: 0; }
-.frame-songke::after  { right: 0; }
-
-/* ===== TOMBOL MUSIK ===== */
-#musicPlayer {
-  position: fixed;
-  bottom: 20px;
-  right: 40px;
-  z-index: 1000;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-  animation: pulse 2s infinite;
-}
-#musicPlayer:hover {
-  transform: scale(1.1);
-}
-@keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
+/* ===== RESPONSIF BACKGROUND ===== */
+@media (max-width: 768px) {
+  .cover, .slide {
+    background-attachment: scroll; /* fix parallax bug di HP */
+  }
 }
 
-/* ===== COVER ===== */
-#cover h1 {
-  transform: translateY(-150px); /* geser ke atas */
-}
-#cover img {
-  animation: fadeInUp 1.2s ease forwards;
-}
-
-/* ===== BACKGROUND ===== */
-.cover, .slide {
+/* ===== COVER SECTION ===== */
+#cover {
+  position: relative;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
-@media (max-width: 768px) {
-  .cover, .slide {
-    background-attachment: scroll; /* fix bug parallax di HP */
-  }
+
+#cover .overlay {
+  background: rgba(0, 0, 0, 0.35); /* tidak terlalu gelap */
+  z-index: 1;
 }
 
-/* ===== RESPONSIF GLOBAL ===== */
-
-/* Tablet dan HP sedang */
-@media (max-width: 768px) {
-  h1 { font-size: 2rem; }
-  h2 { font-size: 1.5rem; }
-  p  { font-size: 1rem; }
-
-  .slide {
-    padding: 60px 20px;
-  }
-
-  img, iframe {
-    max-width: 100%;
-    height: auto;
-  }
-
-  /* Bingkai lebih tipis */
-  .frame-songke::before,
-  .frame-songke::after {
-    width: 12px;
-  }
-
-  #musicPlayer {
-    right: 25px;
-    bottom: 15px;
-  }
+#cover .content {
+  z-index: 2;
+  padding: 20px;
 }
 
-/* HP kecil */
-@media (max-width: 480px) {
-  h1 { font-size: 1.6rem; }
-  h2 { font-size: 1.2rem; }
-  p  { font-size: 0.9rem; }
+#cover h1 {
+  font-size: 2.2rem;
+  margin-bottom: 1.5rem;
+}
 
-  .slide {
-    padding: 40px 15px;
+#cover .logo-komuni {
+  width: 120px;
+  max-width: 35%;
+  margin-bottom: 1.5rem;
+}
+
+#cover p {
+  margin-bottom: 1rem;
+}
+
+/* Responsif tablet & laptop */
+@media (min-width: 768px) {
+  #cover h1 {
+    font-size: 3.5rem;
   }
-
-  .frame-songke::before,
-  .frame-songke::after {
-    width: 8px;
+  #cover .logo-komuni {
+    width: 160px;
+    max-width: 25%;
   }
-
-  #musicPlayer {
-    right: 15px;
-    bottom: 10px;
+  #cover p {
+    font-size: 1.25rem;
   }
 }
