@@ -1,13 +1,24 @@
-/* ===== FONT GLOBAL ===== */
+/* ===== CSS VARIABLES ===== */
+/* Menggunakan variabel CSS untuk pengelolaan yang lebih mudah */
+:root {
+  --font-primary: 'Inter', sans-serif;
+  --font-secondary: 'Playfair Display', serif;
+  --color-overlay: rgba(0, 0, 0, 0.35); /* Warna overlay untuk konsistensi */
+  --frame-width-desktop: 40px;
+  --frame-width-mobile: 20px;
+  --music-player-right-position: 50px;
+}
+
+/* ===== GLOBAL FONT & RESET ===== */
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-primary);
   margin: 0;
   padding: 0;
-  background-size: cover;
-  background-position: center;
+  /* Properti background dipindahkan ke elemen spesifik seperti .slide atau #cover */
 }
+
 .font-playfair {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-secondary);
 }
 
 /* ===== SLIDE LAYOUT ===== */
@@ -23,12 +34,13 @@ body {
   background-repeat: no-repeat;
 }
 
-/* ===== ANIMASI FADE-IN ===== */
+/* ===== FADE-IN ANIMATION ===== */
 .fade-in {
   opacity: 0;
   transform: translateY(20px);
   animation: fadeInUp 1s ease forwards;
 }
+
 @keyframes fadeInUp {
   to {
     opacity: 1;
@@ -36,82 +48,123 @@ body {
   }
 }
 
-/* ===== BINGKAI SONGKE KIRI-KANAN ===== */
+/* ===== LEFT-RIGHT SONGKE FRAME ===== */
 .frame-songke {
-  position: relative;
+  position: relative; /* Ini untuk memastikan bingkai pseudo-element dihitung relatif terhadap viewport */
 }
 
 .frame-songke::before,
 .frame-songke::after {
   content: "";
-  position: fixed;
+  position: fixed; /* Penting agar bingkai tetap terlihat saat scroll */
   top: 0;
   bottom: 0;
-  width: 40px;
-  background: url('songke.png') repeat-y center/cover;
+  width: var(--frame-width-desktop); /* Menggunakan variabel */
+  background: url('songke.png') repeat-y center/cover; /* Pastikan path gambar benar */
   z-index: 50;
 }
 
-.frame-songke::before { left: 0; }
-.frame-songke::after { right: 0; }
+.frame-songke::before {
+  left: 0;
+}
 
-/* Responsif: HP → bingkai lebih kecil */
+.frame-songke::after {
+  right: 0;
+}
+
+/* Responsive: Mobile → smaller frame */
 @media (max-width: 768px) {
   .frame-songke::before,
   .frame-songke::after {
-    width: 20px;
-    background-size: contain;
+    width: var(--frame-width-mobile); /* Menggunakan variabel */
+    background-size: contain; /* Menggunakan 'contain' untuk memastikan gambar masuk dalam lebar yang lebih kecil */
   }
 }
 
-/* ===== TOMBOL MUSIK ===== */
+/* ===== MUSIC BUTTON ===== */
 #musicPlayer {
   position: fixed;
   bottom: 20px;
-  right: 50px; /* beri jarak dari bingkai songke */
+  right: var(--music-player-right-position); /* Menggunakan variabel */
   z-index: 1000;
   transition: transform 0.3s ease, opacity 0.3s ease;
   animation: pulse 2s infinite;
+  /* Pastikan tombol ini memiliki gaya visual (background, padding, border-radius)
+     agar terlihat seperti tombol dan bisa diklik. */
+  background-color: #f0f0f0; /* Contoh: Tambahkan warna latar belakang */
+  border-radius: 50%; /* Contoh: Jadikan bulat */
+  padding: 10px; /* Contoh: Beri jarak */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Contoh: Tambahkan bayangan */
+  display: flex; /* Contoh: Untuk menengahkan ikon jika ada */
+  align-items: center;
+  justify-content: center;
 }
-#musicPlayer:hover { transform: scale(1.1); }
+
+#musicPlayer:hover {
+  transform: scale(1.1);
+}
 
 @keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
 }
 
-/* ===== ANIMASI BOUNCE UNTUK NAMA TAMU ===== */
+/* ===== BOUNCE ANIMATION FOR GUEST NAME ===== */
 .animate-bounce-slow {
   animation: bounce 3s infinite;
 }
+
 @keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-15px); }
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
 }
 
-/* ===== RESPONSIF BACKGROUND ===== */
+/* ===== RESPONSIVE BACKGROUND ===== */
 @media (max-width: 768px) {
-  .cover, .slide {
-    background-attachment: scroll; /* fix parallax bug di HP */
+  .cover,
+  .slide {
+    background-attachment: scroll; /* Perbaiki bug paralaks di HP */
   }
 }
 
 /* ===== COVER SECTION ===== */
 #cover {
+  min-height: 100vh; /* Pastikan cover juga memenuhi viewport */
   position: relative;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  display: flex; /* Tambahkan flexbox untuk centering konten */
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white; /* Asumsi teks di cover berwarna putih */
+  overflow: hidden; /* Penting untuk menjaga konten di dalam batas */
 }
 
 #cover .overlay {
-  background: rgba(0, 0, 0, 0.35); /* tidak terlalu gelap */
-  z-index: 1;
+  position: absolute; /* Penting: agar overlay menutupi seluruh #cover */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--color-overlay); /* Menggunakan variabel */
+  z-index: 1; /* Di bawah konten, di atas background */
 }
 
 #cover .content {
+  position: relative; /* Penting: agar konten berada di atas overlay */
   z-index: 2;
   padding: 20px;
+  max-width: 90%; /* Batasi lebar konten agar tidak terlalu lebar di desktop */
 }
 
 #cover h1 {
@@ -129,15 +182,17 @@ body {
   margin-bottom: 1rem;
 }
 
-/* Responsif tablet & laptop */
+/* Responsive tablet & laptop */
 @media (min-width: 768px) {
   #cover h1 {
     font-size: 3.5rem;
   }
+
   #cover .logo-komuni {
     width: 160px;
     max-width: 25%;
   }
+
   #cover p {
     font-size: 1.25rem;
   }
