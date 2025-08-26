@@ -1,221 +1,173 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Undangan Komuni Pertama - Moses Prodigio Pajar</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Undangan Komuni Pertama - Moses Prodigio Pajar</title>
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="style.css">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css">
 </head>
-<body class="overflow-x-hidden frame-songke"> <!-- Menambahkan kelas frame-songke ke body -->
+<body class="frame-songke"> 
 
-    <!-- ====== PLAYER MUSIK ====== -->
-    <div id="musicPlayer" class="fixed bottom-4 right-4 z-50 hover:bg-gray-50 cursor-pointer">
-        <button id="toggleMusic" class="text-sage-green-dark text-xl focus:outline-none">
-            <i id="musicIcon" class="fas fa-volume-mute"></i>
-        </button>
-        <span class="text-gray-700 text-sm font-semibold">Musik</span>
+  <!-- ====== PLAYER MUSIK ====== -->
+  <div id="musicPlayer" class="fixed bottom-4 right-4 bg-white rounded-full shadow-lg flex items-center gap-3 px-4 py-2 z-50">
+    <button id="toggleMusic" class="text-sage-green-dark text-xl">
+      <i id="musicIcon" class="fas fa-volume-mute"></i>
+    </button>
+    <span class="text-gray-700 text-sm font-semibold">Musik</span>
+  </div>
+
+  <!-- Audio -->
+  <audio id="backgroundMusic" autoplay loop muted>
+    <source src="musik.mp3" type="audio/mpeg">
+    Browser Anda tidak mendukung audio.
+  </audio>
+  <!-- ===== COVER ===== -->
+<section id="cover" class="slide cover relative h-screen flex flex-col items-center justify-center text-white text-center" 
+         style="background-image: url('bg-cover.jpg');">
+
+  <!-- Overlay gelap -->
+  <div class="absolute inset-0 bg-black/50"></div>
+
+  <!-- Isi konten utama -->
+  <div class="relative z-10 px-6 fade-in">
+    <h1 class="font-playfair text-4xl md:text-6xl font-bold mb-4">Undangan Komuni Pertama</h1>
+
+<!-- Logo Komuni -->
+    <img src="logo-komuni.png" alt="Logo Komuni Pertama" class="mx-auto w-50 md:w-60 mb-6 fade-in" />
+
+    <p class="text-2xl md:text-4xl font-semibold mb-6">Moses Prodigio Pajar</p>
+    <p class="text-lg md:text-xl italic mb-12">"Putra Pertama dari Yohanes Pajar dan Imelda H. Jebia"</p>
+  </div>
+
+  <!-- Nama tamu di bagian bawah cover -->
+  <div class="absolute bottom-12 left-0 right-0 z-10 px-6 fade-in">
+    <div class="bg-white bg-opacity-80 border-4 border-yellow-600 rounded-2xl px-6 py-4 shadow-lg max-w-md mx-auto">
+      <p id="guestNameDisplay" class="text-xl md:text-2xl font-semibold text-gray-800 text-center">
+        Kepada Yth: Tamu Undangan
+      </p>
     </div>
+  </div>
+</section>
+  <!-- ===== NARASI UNDANGAN ===== -->
+  <section class="slide py-20 text-center bg-cover bg-center text-white" style="background-image: url('bg-narasi.jpg');">
+    <div class="absolute inset-0 bg-black/60"></div>
+    <div class="relative z-10 container mx-auto max-w-3xl px-6 fade-in">
+      <h2 class="font-playfair text-4xl mb-6">Salam Hangat</h2>
+      <p class="text-lg leading-relaxed">
+        Dengan penuh syukur kepada Tuhan, kami mengundang Bapak/Ibu/Saudara/i
+        untuk hadir dalam Perayaan Komuni Pertama putra kami tercinta,
+        <b>Moses Prodigio Pajar</b>.
+      </p>
+    </div>
+  </section>
 
-    <!-- Audio -->
-    <audio id="backgroundMusic" loop muted>
-        <source src="musik.mp3" type="audio/mpeg">
-        Browser Anda tidak mendukung audio.
-    </audio>
-
-    <!-- ===== COVER ===== -->
-    <section id="cover" class="relative h-screen flex flex-col items-center justify-center text-white text-center"
-             style="background-image: url('bg-cover.jpg');">
-
-        <!-- Overlay gelap -->
-        <div class="overlay absolute inset-0"></div>
-
-        <!-- Isi konten utama -->
-        <div class="content relative z-10 px-6 fade-in fade-in-delay-1">
-            <h1 class="font-playfair text-4xl md:text-6xl font-bold mb-6 drop-shadow-lg">Undangan Komuni Pertama</h1>
-
-            <!-- Logo Komuni -->
-            <img src="logo-komuni.png" alt="Logo Komuni Pertama"
-                 class="logo-komuni mx-auto mb-6 fade-in fade-in-delay-2" />
-
-            <p class="text-2xl md:text-4xl font-semibold mb-4 drop-shadow-md">Moses Prodigio Pajar</p>
-            <p class="text-lg md:text-xl italic drop-shadow-md">"Putra Pertama dari Yohanes Pajar dan Imelda H. Jebia"</p>
+  <!-- ===== WAKTU & TEMPAT ===== -->
+  <section class="slide py-20 bg-cover bg-center text-white text-center" style="background-image: url('bg-waktu.jpg');">
+    <div class="absolute inset-0 bg-black/70"></div>
+    <div class="relative z-10 container mx-auto px-6 fade-in">
+      <h2 class="font-playfair text-4xl mb-8">Waktu & Tempat</h2>
+      <div class="grid md:grid-cols-2 gap-12">
+        <div class="bg-white text-gray-800 rounded-xl p-8 shadow-lg transform hover:scale-105 transition">
+          <h3 class="text-2xl font-bold text-green-700 mb-4">Perayaan Komuni</h3>
+          <p><i class="far fa-calendar-alt mr-2"></i> Rabu, 17 September 2025</p>
+          <p><i class="far fa-clock mr-2"></i> 08.00 WITA</p>
+          <p><i class="fas fa-church mr-2"></i> Gereja Katedral Labuan Bajo</p>
         </div>
-
-        <!-- Nama tamu di bagian bawah cover -->
-        <div class="absolute bottom-8 left-0 right-0 z-10 px-4 sm:px-6 fade-in fade-in-delay-3 animate-bounce-slow">
-            <div class="bg-white bg-opacity-90 border-4 border-yellow-500 rounded-2xl px-6 py-4 shadow-xl max-w-sm mx-auto">
-                <p class="text-base sm:text-lg font-medium text-gray-700 text-center mb-2">Kepada Yth:</p>
-                <p id="guestNameDisplay" class="text-xl sm:text-2xl font-bold text-gray-800 text-center">
-                    Tamu Undangan
-                </p>
-            </div>
+        <div class="bg-white text-gray-800 rounded-xl p-8 shadow-lg transform hover:scale-105 transition">
+          <h3 class="text-2xl font-bold text-green-700 mb-4">Resepsi</h3>
+          <p><i class="far fa-calendar-alt mr-2"></i> Rabu, 17 September 2025</p>
+          <p><i class="far fa-clock mr-2"></i> 12.00 WITA - Selesai</p>
+          <p><i class="fas fa-map-marker-alt mr-2"></i> Jl. Jati Putih Gg. Wae Liba,<br>Desa Batu Cermin</p>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <!-- ===== NARASI UNDANGAN ===== -->
-    <section class="py-20 bg-cover bg-center text-white" style="background-image: url('bg-narasi.jpg');">
-        <div class="absolute inset-0 bg-black/60"></div>
-        <div class="relative z-10 container mx-auto max-w-3xl px-6 text-center fade-in">
-            <h2 class="font-playfair text-4xl md:text-5xl mb-8 drop-shadow-lg">Salam Hangat</h2>
-            <p class="text-lg md:text-xl leading-relaxed bg-white/10 p-6 rounded-xl shadow-lg">
-                Dengan penuh syukur kepada Tuhan, kami mengundang Bapak/Ibu/Saudara/i
-                untuk hadir dalam Perayaan Komuni Pertama putra kami tercinta,
-                <b class="font-semibold text-yellow-300">Moses Prodigio Pajar</b>.
-            </p>
-        </div>
-    </section>
+  <!-- ===== PETA GOOGLE MAPS ===== -->
+  <section class="slide py-20 bg-cover bg-center text-center" style="background-image: url('bg-maps.jpg');">
+  <div class="absolute inset-0 bg-black/70"></div>
+  <div class="relative z-10 container mx-auto px-6 fade-in">
+    <h2 class="font-playfair text-4xl text-white mb-8">Lokasi Acara</h2>
+    <div class="aspect-w-16 aspect-h-9 rounded-lg shadow-lg overflow-hidden">
+      <iframe 
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3945.727582522035!2d120.40726197500001!3d-8.599728991444158!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2db46811a9161a4f%3A0x705d105c31752b0!2sJl.%20Jati%20Putih%20Gg.%20Wae%20Liba%2C%20Batu%20Cermin%2C%20Kec.%20Komodo%2C%20Kabupaten%20Manggarai%20Barat%2C%20Nusa%20Tenggara%20Timur!5e0!3m2!1sid!2sid!4v1701388800000!5m2!1sid!2sid" 
+        width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" 
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+  </div>
+</section>
 
-    <!-- ===== WAKTU & TEMPAT ===== -->
-    <section class="py-20 bg-cover bg-center text-white text-center" style="background-image: url('bg-waktu.jpg');">
-        <div class="absolute inset-0 bg-black/70"></div>
-        <div class="relative z-10 container mx-auto px-6 fade-in">
-            <h2 class="font-playfair text-4xl md:text-5xl mb-12 drop-shadow-lg">Waktu & Tempat</h2>
-            <div class="grid md:grid-cols-2 gap-8 lg:gap-12">
-                <div class="bg-white text-gray-800 rounded-2xl p-8 shadow-xl time-place-card transition duration-300 ease-in-out">
-                    <h3 class="text-2xl font-bold text-green-700 mb-4 flex items-center justify-center gap-3">
-                        <i class="fas fa-cross text-green-600"></i> Perayaan Komuni
-                    </h3>
-                    <p class="flex items-center justify-center mb-2 text-lg"><i class="far fa-calendar-alt mr-3 text-green-600"></i> Rabu, 17 September 2025</p>
-                    <p class="flex items-center justify-center mb-2 text-lg"><i class="far fa-clock mr-3 text-green-600"></i> 08.00 WITA</p>
-                    <p class="flex items-center justify-center text-lg"><i class="fas fa-church mr-3 text-green-600"></i> Gereja Katedral Labuan Bajo</p>
-                </div>
-                <div class="bg-white text-gray-800 rounded-2xl p-8 shadow-xl time-place-card transition duration-300 ease-in-out">
-                    <h3 class="text-2xl font-bold text-green-700 mb-4 flex items-center justify-center gap-3">
-                        <i class="fas fa-champagne-glasses text-green-600"></i> Resepsi
-                    </h3>
-                    <p class="flex items-center justify-center mb-2 text-lg"><i class="far fa-calendar-alt mr-3 text-green-600"></i> Rabu, 17 September 2025</p>
-                    <p class="flex items-center justify-center mb-2 text-lg"><i class="far fa-clock mr-3 text-green-600"></i> 12.00 WITA - Selesai</p>
-                    <p class="flex items-center justify-center text-lg"><i class="fas fa-map-marker-alt mr-3 text-green-600"></i> Jl. Jati Putih Gg. Wae Liba,<br>Desa Batu Cermin</p>
-                </div>
-            </div>
-        </div>
-    </section>
+  <!-- ===== GALERI FOTO ===== -->
+  <section class="slide py-20 bg-cover bg-center text-center text-white" style="background-image: url('bg-galeri.jpg');">
+    <div class="absolute inset-0 bg-black/70"></div>
+    <div class="relative z-10 container mx-auto px-6 fade-in">
+      <h2 class="font-playfair text-4xl mb-12">Galeri Foto</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <img src="foto1.jpg" class="rounded-lg shadow-md hover:scale-105 transition-transform">
+        <img src="foto2.jpg" class="rounded-lg shadow-md hover:scale-105 transition-transform">
+        <img src="foto3.jpg" class="rounded-lg shadow-md hover:scale-105 transition-transform">
+        <img src="foto4.jpg" class="rounded-lg shadow-md hover:scale-105 transition-transform">
+      </div>
+    </div>
+  </section>
 
-    <!-- ===== PETA GOOGLE MAPS ===== -->
-    <section class="py-20 bg-cover bg-center text-center" style="background-image: url('bg-maps.jpg');">
-        <div class="absolute inset-0 bg-black/70"></div>
-        <div class="relative z-10 container mx-auto px-6 fade-in">
-            <h2 class="font-playfair text-4xl md:text-5xl text-white mb-12 drop-shadow-lg">Lokasi Acara</h2>
-            <div class="aspect-w-16 aspect-h-9 rounded-2xl shadow-xl overflow-hidden border-4 border-yellow-500">
-                <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3945.727582522035!2d120.40726197500001!3d-8.599728991444158!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2db46811a9161a4f%3A0x705d105c31752b0!2sJl.%20Jati%20Putih%20Gg.%20Wae%20Liba%2C%20Batu%20Cermin%2C%20Kec.%20Komodo%2C%20Kabupaten%20Manggarai%20Barat%2C%20Nusa%20Tenggara%20Timur!5e0!3m2!1sid!2sid!4v1701388800000!5m2!1sid!2sid"
-                    width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade"
-                    title="Google Maps Lokasi Resepsi">
-                </iframe>
-            </div>
-        </div>
-    </section>
+  <!-- ===== UNGKAPAN TERIMA KASIH ===== -->
+  <section class="slide py-20 bg-cover bg-center text-white text-center" style="background-image: url('bg-thanks.jpg');">
+    <div class="absolute inset-0 bg-black/70"></div>
+    <div class="relative z-10 container mx-auto px-6 max-w-2xl fade-in">
+      <h2 class="font-playfair text-4xl mb-6">Terima Kasih</h2>
+      <p class="text-lg leading-relaxed">
+        Dengan penuh sukacita, kami sekeluarga mengucapkan terima kasih atas doa,
+        perhatian, dan kehadiran Bapak/Ibu/Saudara/i yang turut menyemarakkan
+        perayaan sakral ini.
+      </p>
+      <p class="mt-6 font-semibold">Keluarga Besar<br>Moses Prodigio Pajar</p>
+    </div>
+  </section>
 
-    <!-- ===== GALERI FOTO ===== -->
-    <section class="py-20 bg-cover bg-center text-center text-white" style="background-image: url('bg-galeri.jpg');">
-        <div class="absolute inset-0 bg-black/70"></div>
-        <div class="relative z-10 container mx-auto px-6 fade-in">
-            <h2 class="font-playfair text-4xl md:text-5xl mb-12 drop-shadow-lg">Galeri Foto</h2>
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                <img src="foto1.jpg" alt="Foto Komuni 1" class="rounded-xl shadow-lg hover:scale-105 transition-transform duration-300 gallery-image">
-                <img src="foto2.jpg" alt="Foto Komuni 2" class="rounded-xl shadow-lg hover:scale-105 transition-transform duration-300 gallery-image">
-                <img src="foto3.jpg" alt="Foto Komuni 3" class="rounded-xl shadow-lg hover:scale-105 transition-transform duration-300 gallery-image">
-                <img src="foto4.jpg" alt="Foto Komuni 4" class="rounded-xl shadow-lg hover:scale-105 transition-transform duration-300 gallery-image">
-            </div>
-        </div>
-    </section>
+  <!-- FOOTER -->
+  <footer class="py-6 bg-gray-900 text-white text-center">
+    <p class="text-sm">© 2025 Keluarga Pajar | Undangan Komuni Pertama</p>
+  </footer>
 
-    <!-- ===== UNGKAPAN TERIMA KASIH ===== -->
-    <section class="py-20 bg-cover bg-center text-white text-center" style="background-image: url('bg-thanks.jpg');">
-        <div class="absolute inset-0 bg-black/70"></div>
-        <div class="relative z-10 container mx-auto px-6 max-w-2xl fade-in">
-            <h2 class="font-playfair text-4xl md:text-5xl mb-8 drop-shadow-lg">Terima Kasih</h2>
-            <p class="text-lg md:text-xl leading-relaxed bg-white/10 p-6 rounded-xl shadow-lg">
-                Dengan penuh sukacita, kami sekeluarga mengucapkan terima kasih atas doa,
-                perhatian, dan kehadiran Bapak/Ibu/Saudara/i yang turut menyemarakkan
-                perayaan sakral ini.
-            </p>
-            <p class="mt-8 font-playfair text-2xl md:text-3xl font-semibold text-yellow-300 drop-shadow-md">Keluarga Besar<br>Moses Prodigio Pajar</p>
-        </div>
-    </section>
+  <!-- SCRIPT Nama Tamu -->
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const guestName = urlParams.get('tamu');
+    if (guestName) {
+      document.getElementById("guestNameDisplay").textContent = `Kepada Yth: 
+		${guestName}`;
+    }
+  </script>
 
-    <!-- FOOTER -->
-    <footer class="py-8 bg-gray-900 text-white text-center">
-        <p class="text-sm md:text-base">© 2025 Keluarga Pajar | Undangan Komuni Pertama</p>
-    </footer>
+<script>
+  const music = document.getElementById("backgroundMusic");
+  const toggleBtn = document.getElementById("toggleMusic");
+  const icon = document.getElementById("musicIcon");
 
-    <!-- SCRIPT Nama Tamu dan Musik Player -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const guestName = urlParams.get('tamu');
-            const guestNameDisplay = document.getElementById("guestNameDisplay");
-
-            if (guestName) {
-                // Decode URI component untuk menangani spasi atau karakter khusus
-                guestNameDisplay.textContent = decodeURIComponent(guestName);
-            } else {
-                guestNameDisplay.textContent = "Tamu Undangan";
-            }
-
-            const music = document.getElementById("backgroundMusic");
-            const toggleBtn = document.getElementById("toggleMusic");
-            const icon = document.getElementById("musicIcon");
-
-            // Fungsi untuk memulai musik setelah interaksi pengguna
-            const playMusic = () => {
-                if (music.paused && !music.muted) {
-                    music.play().catch(error => {
-                        console.log("Autoplay failed:", error);
-                        // Mungkin tampilkan pesan ke pengguna untuk memutar musik secara manual
-                    });
-                }
-            };
-
-            // Tambahkan event listener untuk interaksi pertama pengguna
-            document.body.addEventListener('click', () => {
-                // Coba putar musik hanya jika belum diputar dan tidak di-mute
-                if (music.paused && !music.muted) {
-                    playMusic();
-                    // Hapus event listener setelah interaksi pertama
-                    document.body.removeEventListener('click', playMusic);
-                }
-            }, { once: true });
-
-
-            toggleBtn.addEventListener("click", (e) => {
-                e.stopPropagation(); // Mencegah event click menyebar ke body
-                if (music.muted) {
-                    music.muted = false;
-                    icon.classList.remove("fa-volume-mute");
-                    icon.classList.add("fa-volume-up");
-                    playMusic(); // Coba putar musik saat di-unmute
-                } else {
-                    music.muted = true;
-                    music.pause(); // Hentikan musik saat di-mute
-                    icon.classList.remove("fa-volume-up");
-                    icon.classList.add("fa-volume-mute");
-                }
-            });
-
-            // Pastikan musik dimulai setelah halaman dimuat dan interaksi pertama
-            // Ini akan mencoba memutar musik setelah interaksi pertama pengguna
-            // dan akan menangani jika browser memblokir autoplay
-            window.addEventListener('load', () => {
-                // Jika musik diputar otomatis (jarang terjadi tanpa interaksi)
-                if (!music.paused && !music.muted) {
-                    icon.classList.remove("fa-volume-mute");
-                    icon.classList.add("fa-volume-up");
-                }
-            });
-        });
-    </script>
+  toggleBtn.addEventListener("click", () => {
+    if (music.muted) {
+      music.muted = false;
+      icon.classList.remove("fa-volume-mute");
+      icon.classList.add("fa-volume-up");
+    } else {
+      music.muted = true;
+      icon.classList.remove("fa-volume-up");
+      icon.classList.add("fa-volume-mute");
+    }
+  });
+</script>
 </body>
 </html>
