@@ -1,547 +1,173 @@
 <!DOCTYPE html>
-
 <html lang="id">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Undangan Komuni Pertama - Moses Prodigio Pajar</title>
-<!-- Tailwind CSS CDN -->
-<script src="https://cdn.tailwindcss.com"></script>
-<!-- Google Fonts: Inter -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&amp;display=swap" rel="stylesheet"/>
-<!-- Font Awesome for Icons -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
-<!-- File CSS Khusus -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Undangan Komuni Pertama - Moses Prodigio Pajar</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-gray-50 text-gray-800">
-<!-- Firebase SDKs -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-  import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-  import {
-    getFirestore,
-    collection,
-    addDoc,
-    serverTimestamp,
-    onSnapshot,
-    query
-  } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+<body class="frame-songke"> 
 
-  const appId = "komuni-moses"; // ⚠️ Gantilah jika berbeda
+  <!-- ====== PLAYER MUSIK ====== -->
+  <div id="musicPlayer" class="fixed bottom-4 right-4 bg-white rounded-full shadow-lg flex items-center gap-3 px-4 py-2 z-50">
+    <button id="toggleMusic" class="text-sage-green-dark text-xl">
+      <i id="musicIcon" class="fas fa-volume-mute"></i>
+    </button>
+    <span class="text-gray-700 text-sm font-semibold">Musik</span>
+  </div>
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyAbOpS4Pt-ADFCnzle1uCt1DWPp9saFsRM",
-    authDomain: "komuni-moses.firebaseapp.com",
-    projectId: "komuni-moses",
-    storageBucket: "komuni-moses.appspot.com",
-    messagingSenderId: "97500198342",
-    appId: "1:97500198342:web:63a96e072a72d9f9ab6ec7",
-    measurementId: "G-7VZPSSMY6F"
-  };
+  <!-- Audio -->
+  <audio id="backgroundMusic" autoplay loop muted>
+    <source src="musik.mp3" type="audio/mpeg">
+    Browser Anda tidak mendukung audio.
+  </audio>
+  <!-- ===== COVER ===== -->
+<section id="cover" class="slide cover relative h-screen flex flex-col items-center justify-center text-white text-center" 
+         style="background-image: url('bg-cover.jpg');">
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+  <!-- Overlay gelap -->
+  <div class="absolute inset-0 bg-black/50"></div>
 
-  let userId = null;
+  <!-- Isi konten utama -->
+  <div class="relative z-10 px-6 fade-in">
+    <h1 class="font-playfair text-4xl md:text-6xl font-bold mb-4">Undangan Komuni Pertama</h1>
 
-  function showModal(message) {
-    const modal = document.getElementById('myModal');
-    const modalMessage = document.getElementById('modalMessage');
-    modalMessage.textContent = message;
-    modal.style.display = 'flex';
-  }
+<!-- Logo Komuni -->
+    <img src="logo-komuni.png" alt="Logo Komuni Pertama" class="mx-auto w-50 md:w-60 mb-6 fade-in" />
 
-  window.closeModal = function () {
-    document.getElementById('myModal').style.display = 'none';
-  };
+    <p class="text-2xl md:text-4xl font-semibold mb-6">Moses Prodigio Pajar</p>
+    <p class="text-lg md:text-xl italic mb-12">"Putra Pertama dari Yohanes Pajar dan Imelda H. Jebia"</p>
+  </div>
 
-  function setupGuestbookListener() {
-    const q = query(collection(db, `artifacts/${appId}/public/data/guestbook`));
-    onSnapshot(q, (snapshot) => {
-      const messages = [];
-      snapshot.forEach(doc => {
-        messages.push({ id: doc.id, ...doc.data() });
-      });
-      displayGuestbookMessages(messages);
-    }, (error) => {
-      showModal("Gagal memuat ucapan tamu: " + error.message);
-    });
-  }
+  <!-- Nama tamu di bagian bawah cover -->
+  <div class="absolute bottom-12 left-0 right-0 z-10 px-6 fade-in">
+    <div class="bg-white bg-opacity-80 border-4 border-yellow-600 rounded-2xl px-6 py-4 shadow-lg max-w-md mx-auto">
+      <p id="guestNameDisplay" class="text-xl md:text-2xl font-semibold text-gray-800 text-center">
+        Kepada Yth: Tamu Undangan
+      </p>
+    </div>
+  </div>
+</section>
+  <!-- ===== NARASI UNDANGAN ===== -->
+  <section class="slide py-20 text-center bg-cover bg-center text-white" style="background-image: url('bg-narasi.jpg');">
+    <div class="absolute inset-0 bg-black/60"></div>
+    <div class="relative z-10 container mx-auto max-w-3xl px-6 fade-in">
+      <h2 class="font-playfair text-4xl mb-6">Salam Hangat</h2>
+      <p class="text-lg leading-relaxed">
+        Dengan penuh syukur kepada Tuhan, kami mengundang Bapak/Ibu/Saudara/i
+        untuk hadir dalam Perayaan Komuni Pertama putra kami tercinta,
+        <b>Moses Prodigio Pajar</b>.
+      </p>
+    </div>
+  </section>
 
-  function displayGuestbookMessages(messages) {
-    const guestbookContainer = document.getElementById('guestbookMessages');
-    guestbookContainer.innerHTML = '';
-
-    messages.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
-
-    if (messages.length === 0) {
-      guestbookContainer.innerHTML = '<p class="text-gray-600 text-center">Belum ada ucapan. Jadilah yang pertama!</p>';
-      return;
-    }
-
-    messages.forEach(msg => {
-      const el = document.createElement('div');
-      el.className = 'bg-white p-4 rounded-lg shadow-sm mb-4 border border-gray-200';
-      const date = msg.timestamp ? new Date(msg.timestamp.seconds * 1000).toLocaleString('id-ID') : 'Waktu tidak diketahui';
-      el.innerHTML = `
-        <p class="font-semibold text-lg">${msg.name}</p>
-        <p class="text-sm text-gray-500">${date}</p>
-        <p class="text-gray-700">${msg.message}</p>
-      `;
-      guestbookContainer.appendChild(el);
-    });
-  }
-
-  window.submitRsvp = async function () {
-    const name = document.getElementById('rsvpName').value;
-    const attendance = document.getElementById('rsvpAttendance').value;
-    const message = document.getElementById('rsvpMessage').value;
-
-    if (!name || !attendance) {
-      showModal("Nama dan Kehadiran wajib diisi.");
-      return;
-    }
-
-    try {
-      await addDoc(collection(db, `artifacts/${appId}/public/data/rsvps`), {
-        name,
-        attendance,
-        message,
-        userId,
-        timestamp: serverTimestamp()
-      });
-      showModal("RSVP berhasil dikirim!");
-      document.getElementById('rsvpForm').reset();
-    } catch (e) {
-      showModal("Gagal mengirim RSVP: " + e.message);
-    }
-  };
-
-  window.submitGuestbook = async function () {
-    const name = document.getElementById('guestName').value;
-    const message = document.getElementById('guestMessage').value;
-
-    if (!name || !message) {
-      showModal("Nama dan Ucapan wajib diisi.");
-      return;
-    }
-
-    try {
-      await addDoc(collection(db, `artifacts/${appId}/public/data/guestbook`), {
-        name,
-        message,
-        userId,
-        timestamp: serverTimestamp()
-      });
-      showModal("Ucapan berhasil dikirim!");
-      document.getElementById('guestbookForm').reset();
-    } catch (e) {
-      showModal("Gagal mengirim ucapan: " + e.message);
-    }
-  };
-
-  window.addEventListener("load", async () => {
-    try {
-      const result = await signInAnonymously(auth);
-      userId = result.user.uid;
-      console.log("Signed in as", userId);
-      setupGuestbookListener();
-    } catch (e) {
-      showModal("Gagal masuk ke Firebase: " + e.message);
-    }
-  });
-</script>
-<!-- Custom Modal for Alerts/Confirmations -->
-<div class="modal" id="myModal">
-<div class="modal-content">
-<span class="close-button" onclick="closeModal()">×</span>
-<p class="text-lg font-medium text-gray-800" id="modalMessage"></p>
-<button class="mt-4 px-6 py-2 bg-sage-green text-white rounded-full hover:bg-opacity-90 transition-colors" onclick="closeModal()">OK</button>
-</div>
-</div>
-<!-- Navigation Bar -->
-<nav class="fixed top-0 left-0 right-0 bg-white bg-opacity-90 shadow-lg z-50 p-4 transition-all duration-300 ease-in-out">
-<div class="container mx-auto flex justify-between items-center px-4">
-<a class="text-xl font-bold text-sage-green-dark hover:text-sage-green transition-colors" href="#hero">Gio Pajar</a>
-<div class="hidden md:flex space-x-6">
-<a class="text-gray-700 hover:text-sage-green transition-colors" href="#acara">Acara</a>
-<a class="text-gray-700 hover:text-sage-green transition-colors" href="#cerita">Cerita</a>
-<a class="text-gray-700 hover:text-sage-green transition-colors" href="#galeri">Galeri</a>
-<a class="text-gray-700 hover:text-sage-green transition-colors" href="#ucapan">Ucapan</a>
-</div>
-<button class="md:hidden text-gray-700 focus:outline-none" id="menu-button">
-<i class="fas fa-bars text-xl"></i>
-</button>
-</div>
-<!-- Mobile Menu -->
-<div class="hidden md:hidden mt-4 space-y-2 px-4 pb-2" id="mobile-menu">
-<a class="block text-gray-700 hover:text-sage-green transition-colors py-2" href="#acara">Acara</a>
-<a class="block text-gray-700 hover:text-sage-green transition-colors py-2" href="#cerita">Cerita</a>
-<a class="block text-gray-700 hover:text-sage-green transition-colors py-2" href="#galeri">Galeri</a>
-<a class="block text-gray-700 hover:text-sage-green transition-colors py-2" href="#ucapan">Ucapan</a>
-</div>
-</nav>
-<!-- Hero Section -->
-<section class="relative h-screen flex items-center justify-center text-white text-center parallax-bg" id="hero" style="background-image: url('fotogio.jpg');background-image: url('bg-hero.jpg'); background-size: cover; background-position: center;">
-<div class="absolute inset-0 bg-black/50"></div>
-<div class="relative z-10 p-6 max-w-2xl mx-auto fade-in">
-<h1 class="text-4xl md:text-6xl font-bold mb-4 drop-shadow-lg">Undangan Komuni Pertama</h1>
-<p class="text-2xl md:text-4xl font-semibold mb-6 drop-shadow-lg">Moses Prodigio Pajar</p>
-<p class="text-lg md:text-xl mb-8 drop-shadow-lg">"Putra Pertama dari Yohanes Pajar dan Imelda H. Jebia"</p>
-<button class="px-8 py-3 bg-white text-sage-green-dark rounded-full text-lg font-semibold shadow-lg hover:bg-gray-100 transition-all duration-300 ease-in-out transform hover:scale-105" id="open-music-modal">
-<i class="fas fa-music mr-2"></i> Putar Musik
-            </button>
-<!-- Nama Tamu -->
-      <div id="guestNameWrapper" class="mt-8 flex justify-center">
-        <div class="border-4 border-yellow-600 rounded-2xl bg-white bg-opacity-80 px-6 py-4 shadow-lg">
-          <p id="guestNameDisplay" class="text-xl md:text-2xl font-semibold text-gray-800 text-center"></p>
+  <!-- ===== WAKTU & TEMPAT ===== -->
+  <section class="slide py-20 bg-cover bg-center text-white text-center" style="background-image: url('bg-waktu.jpg');">
+    <div class="absolute inset-0 bg-black/70"></div>
+    <div class="relative z-10 container mx-auto px-6 fade-in">
+      <h2 class="font-playfair text-4xl mb-8">Waktu & Tempat</h2>
+      <div class="grid md:grid-cols-2 gap-12">
+        <div class="bg-white text-gray-800 rounded-xl p-8 shadow-lg transform hover:scale-105 transition">
+          <h3 class="text-2xl font-bold text-green-700 mb-4">Perayaan Komuni</h3>
+          <p><i class="far fa-calendar-alt mr-2"></i> Rabu, 17 September 2025</p>
+          <p><i class="far fa-clock mr-2"></i> 08.00 WITA</p>
+          <p><i class="fas fa-church mr-2"></i> Gereja Katedral Labuan Bajo</p>
+        </div>
+        <div class="bg-white text-gray-800 rounded-xl p-8 shadow-lg transform hover:scale-105 transition">
+          <h3 class="text-2xl font-bold text-green-700 mb-4">Resepsi</h3>
+          <p><i class="far fa-calendar-alt mr-2"></i> Rabu, 17 September 2025</p>
+          <p><i class="far fa-clock mr-2"></i> 12.00 WITA - Selesai</p>
+          <p><i class="fas fa-map-marker-alt mr-2"></i> Jl. Jati Putih Gg. Wae Liba,<br>Desa Batu Cermin</p>
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- ===== PETA GOOGLE MAPS ===== -->
+  <section class="slide py-20 bg-cover bg-center text-center" style="background-image: url('bg-maps.jpg');">
+  <div class="absolute inset-0 bg-black/70"></div>
+  <div class="relative z-10 container mx-auto px-6 fade-in">
+    <h2 class="font-playfair text-4xl text-white mb-8">Lokasi Acara</h2>
+    <div class="aspect-w-16 aspect-h-9 rounded-lg shadow-lg overflow-hidden">
+      <iframe 
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3945.727582522035!2d120.40726197500001!3d-8.599728991444158!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2db46811a9161a4f%3A0x705d105c31752b0!2sJl.%20Jati%20Putih%20Gg.%20Wae%20Liba%2C%20Batu%20Cermin%2C%20Kec.%20Komodo%2C%20Kabupaten%20Manggarai%20Barat%2C%20Nusa%20Tenggara%20Timur!5e0!3m2!1sid!2sid!4v1701388800000!5m2!1sid!2sid" 
+        width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" 
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+  </div>
 </section>
-<!-- Countdown Timer Section -->
-<section class="py-16 bg-sage-green text-white text-center shadow-inner fade-in section-border" id="countdown">
-<div class="container mx-auto px-4">
-<h2 class="text-3xl md:text-4xl font-bold mb-8">Menghitung Mundur Menuju Hari Istimewa</h2>
-<div class="flex justify-center space-x-4 md:space-x-8 text-4xl md:text-5xl font-bold" id="countdown-timer">
-<div class="flex flex-col items-center">
-<span id="days">00</span>
-<span class="text-base md:text-lg font-medium">Hari</span>
-</div>
-<div class="flex flex-col items-center">
-<span id="hours">00</span>
-<span class="text-base md:text-lg font-medium">Jam</span>
-</div>
-<div class="flex flex-col items-center">
-<span id="minutes">00</span>
-<span class="text-base md:text-lg font-medium">Menit</span>
-</div>
-<div class="flex flex-col items-center">
-<span id="seconds">00</span>
-<span class="text-base md:text-lg font-medium">Detik</span>
-</div>
-</div>
-</div>
-</section>
-<!-- Acara Section -->
-<section class="py-16 bg-gray-50 text-gray-800 fade-in section-border" id="acara" style="background-image: url('bg-acara.jpg'); background-size: cover; background-position: center;">
-<div class="container mx-auto px-4">
-<h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-sage-green-dark">Detail Acara</h2>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-<!-- Komuni Section -->
-<div class="bg-white p-8 rounded-xl shadow-lg border border-gray-200 transform hover:scale-105 transition-transform duration-300 ease-in-out">
-<h3 class="text-2xl md:text-3xl font-bold mb-6 text-center text-sage-green">Acara Komuni</h3>
-<div class="space-y-4 text-center">
-<p class="text-lg flex items-center justify-center"><i class="far fa-calendar-alt text-sage-green mr-3"></i> 17 September 2025</p>
-<p class="text-lg flex items-center justify-center"><i class="far fa-clock text-sage-green mr-3"></i> 08:00 WITA</p>
-<p class="text-lg flex items-center justify-center"><i class="fas fa-church text-sage-green mr-3"></i> Gereja Katedral Labuan Bajo</p>
-<p class="text-gray-600 text-sm italic">Mohon doa restu untuk Moses dalam menerima Sakramen Komuni Pertamanya.</p>
-</div>
-</div>
-<!-- Resepsi Section -->
-<div class="bg-white p-8 rounded-xl shadow-lg border border-gray-200 transform hover:scale-105 transition-transform duration-300 ease-in-out">
-<h3 class="text-2xl md:text-3xl font-bold mb-6 text-center text-sage-green">Acara Resepsi</h3>
-<div class="space-y-4 text-center">
-<p class="text-lg flex items-center justify-center"><i class="far fa-calendar-alt text-sage-green mr-3"></i> 17 September 2025</p>
-<p class="text-lg flex items-center justify-center"><i class="far fa-clock text-sage-green mr-3"></i> 12:00 WITA - Selesai</p>
-<p class="text-lg flex items-center justify-center text-wrap"><i class="fas fa-map-marker-alt text-sage-green mr-3"></i> Jl. Jati Putih Gg. Wae Liba Desa Batu Cermin</p>
-<p class="text-gray-600 text-sm italic">Kehadiran Anda adalah sukacita bagi kami.</p>
-</div>
-<div class="mt-8">
-<h4 class="text-xl font-semibold mb-4 text-center text-sage-green-dark">Lokasi Resepsi</h4>
-<div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden shadow-md">
-<iframe allowfullscreen="" height="450" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3945.727582522035!2d120.40726197500001!3d-8.599728991444158!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2db46811a9161a4f%3A0x705d105c31752b0!2sJl.%20Jati%20Putih%20Gg.%20Wae%20Liba%2C%20Batu%20Cermin%2C%20Kec.%20Komodo%2C%20Kabupaten%20Manggarai%20Barat%2C%20Nusa%20Tenggara%20Timur!5e0!3m2!1sid!2sid!4v1701388800000!5m2!1sid!2sid" style="border:0;" width="100%"></iframe>
-</div>
-<a class="block mt-4 text-center text-sage-green-dark hover:underline font-medium" href="https://maps.app.goo.gl/YourGoogleMapsLink" target="_blank">Buka di Google Maps</a>
-</div>
-</div>
-</div>
-</div>
-</section>
-<!-- Cerita Singkat Komuni Section -->
-<section class="py-16 bg-sage-green text-white text-center fade-in section-border" id="cerita" style="background-image: url('bg-cerita.jpg'); background-size: cover; background-position: center;">
-<div class="container mx-auto px-4 max-w-3xl">
-<h2 class="text-3xl md:text-4xl font-bold mb-8">Cerita Singkat Komuni</h2>
-<p class="text-lg md:text-xl leading-relaxed">
-                "Akulah Roti Hidup" (Yohanes 6:35). Ayat ini menjadi dasar iman bagi anak Gio dalam menerima Sakramen Komuni Pertamanya. Ini adalah momen sakral di mana ia akan menerima Tubuh dan Darah Kristus untuk pertama kalinya, menjadi satu dengan-Nya dalam Ekaristi Kudus. Perjalanan iman Anak Gio dimulai sejak ia dibabtis, dan kami bersyukur atas berkat ini.
-            </p>
-</div>
-</section>
-<!-- Galeri Foto Section -->
-<section class="py-16 bg-gray-50 text-gray-800 fade-in section-border" id="galeri" style="background-image: url('bg-galeri.jpg'); background-size: cover; background-position: center;">
-<div class="container mx-auto px-4">
-<h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-sage-green-dark">Galeri Foto Gio</h2>
-<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-<div class="relative overflow-hidden rounded-lg shadow-md group">
-<img class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110" src="fotogio.jpg"/>
-<div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-<p class="text-white text-lg font-semibold">Senyum Ceria</p>
-</div>
-</div>
-<div class="relative overflow-hidden rounded-lg shadow-md group">
-<img class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110" src="fotogio.jpg"/>
-<div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-<p class="text-white text-lg font-semibold">Momen Indah</p>
-</div>
-</div>
-<div class="relative overflow-hidden rounded-lg shadow-md group">
-<img class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110" src="fotogio.jpg"/>
-<div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-<p class="text-white text-lg font-semibold">Penuh Berkat</p>
-</div>
-</div>
-<div class="relative overflow-hidden rounded-lg shadow-md group">
-<img class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110" src="fotogio.jpg"/>
-<div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-<p class="text-white text-lg font-semibold">Persiapan</p>
-</div>
-</div>
-<div class="relative overflow-hidden rounded-lg shadow-md group">
-<img class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110" src="fotogio.jpg"/>
-<div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-<p class="text-white text-lg font-semibold">Harapan</p>
-</div>
-</div>
-<div class="relative overflow-hidden rounded-lg shadow-md group">
-<img class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110" src="fotogio.jpg"/>
-<div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-<p class="text-white text-lg font-semibold">Sukacita</p>
-</div>
-</div>
-</div></div></section>
-<!-- RSVP Form Section -->
-<section class="py-16 bg-sage-green text-white fade-in section-border" id="rsvp">
-<div class="container mx-auto px-4 max-w-2xl">
-<h2 class="text-3xl md:text-4xl font-bold text-center mb-8">Konfirmasi Kehadiran</h2>
-<p class="text-center text-lg mb-8">Mohon konfirmasi kehadiran Anda untuk acara resepsi.</p>
-<form class="bg-white p-8 rounded-xl shadow-lg text-gray-800" id="rsvpForm">
-<div class="mb-6">
-<label class="block text-gray-700 text-sm font-bold mb-2" for="rsvpName">Nama Lengkap:</label>
-<input class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-sage-green transition-all duration-200" id="rsvpName" name="name" required="" type="text"/>
-</div>
-<div class="mb-6">
-<label class="block text-gray-700 text-sm font-bold mb-2" for="rsvpAttendance">Konfirmasi Kehadiran:</label>
-<select class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-sage-green transition-all duration-200" id="rsvpAttendance" name="attendance" required="">
-<option value="">Pilih Opsi</option>
-<option value="hadir">Akan Hadir</option>
-<option value="tidak-hadir">Tidak Dapat Hadir</option>
-</select>
-</div>
-<div class="mb-6">
-<label class="block text-gray-700 text-sm font-bold mb-2" for="rsvpMessage">Pesan (Opsional):</label>
-<textarea class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-sage-green transition-all duration-200" id="rsvpMessage" name="message" rows="4"></textarea>
-</div>
-<div class="flex items-center justify-center">
-<button class="bg-sage-green text-white font-bold py-3 px-6 rounded-full hover:bg-opacity-90 transition-all duration-300 ease-in-out transform hover:scale-105 shadow-md" onclick="submitRsvp()" type="button">
-                        Kirim Konfirmasi
-                    </button>
-</div>
-</form>
-</div>
-</section>
-<!-- Ucapan Tamu Section -->
-<section class="py-16 bg-gray-50 text-gray-800 fade-in section-border" id="ucapan">
-<div class="container mx-auto px-4 max-w-3xl">
-<h2 class="text-3xl md:text-4xl font-bold text-center mb-8 text-sage-green-dark">Ucapan &amp; Doa</h2>
-<p class="text-center text-lg mb-8">"Akulah Roti Hidup" - Silakan tinggalkan ucapan dan doa terbaik Anda untuk Moses.</p>
-<form class="bg-white p-8 rounded-xl shadow-lg mb-12 border border-gray-200" id="guestbookForm">
-<div class="mb-6">
-<label class="block text-gray-700 text-sm font-bold mb-2" for="guestName">Nama Anda:</label>
-<input class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-sage-green transition-all duration-200" id="guestName" name="guestName" required="" type="text"/>
-</div>
-<div class="mb-6">
-<label class="block text-gray-700 text-sm font-bold mb-2" for="guestMessage">Ucapan/Doa:</label>
-<textarea class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-sage-green transition-all duration-200" id="guestMessage" name="guestMessage" required="" rows="5"></textarea>
-</div>
-<div class="flex items-center justify-center">
-<button class="bg-sage-green text-white font-bold py-3 px-6 rounded-full hover:bg-opacity-90 transition-all duration-300 ease-in-out transform hover:scale-105 shadow-md" onclick="submitGuestbook()" type="button">
-                        Kirim Ucapan
-                    </button>
-</div>
-</form>
-<h3 class="text-2xl font-bold text-center mb-6 text-sage-green-dark">Ucapan dari Para Tamu</h3>
-<div class="space-y-4" id="guestbookMessages">
-<!-- Messages will be loaded here by JavaScript -->
-<p class="text-gray-600 text-center">Memuat ucapan...</p>
-</div>
-<div class="text-xs text-gray-500 text-center mt-8" id="userIdDisplay"></div>
-</div>
-</section>
-<!-- Footer -->
-<footer class="bg-sage-green-dark text-white py-8 text-center">
-<div class="container mx-auto px-4">
-<p>© John Pajar Media.</p>
-</div>
-</footer>
-<!-- Music Player Modal -->
-<div class="modal" id="musicModal">
-<div class="modal-content">
-<span class="close-button" onclick="window.closeMusicModal()">×</span>
-<h3 class="text-xl font-bold mb-4 text-sage-green-dark">Musik Latar</h3>
-<p class="text-gray-700 mb-4">
-                Musik latar akan diputar secara otomatis (tetapi mungkin dalam keadaan **mute** karena kebijakan browser). Silakan klik tombol "Unmute" jika musik tidak bersuara.
-            </p>
-<!-- Audio Player -->
-<audio autoplay="" id="backgroundMusic" loop="" muted="">
-<!-- GANTI URL INI DENGAN LINK LANGSUNG KE FILE MP3 ANDA YANG DIHOSTING PUBLIK -->
-<source src="instrumen.mp3" type="audio/mpeg"/>
-                Browser Anda tidak mendukung elemen audio.
-            </audio>
-<button class="mt-4 px-6 py-2 bg-sage-green text-white rounded-full hover:bg-opacity-90 transition-colors" id="unmuteButton">
-<i class="fas fa-volume-up mr-2"></i> Unmute
-            </button>
-</div>
-</div>
-<script>
-        // Tailwind CSS Customization (Sage Green Palette)
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'sage-green': {
-                            DEFAULT: '#A0C49D', // Base Sage Green
-                            'light': '#C4D7B2',
-                            'dark': '#6B8E6F',
-                        },
-                    },
-                },
-            },
-        };
 
-        // Countdown Timer Logic
-        const communionDate = new Date("2025-09-13T08:00:00").getTime();
+  <!-- ===== GALERI FOTO ===== -->
+  <section class="slide py-20 bg-cover bg-center text-center text-white" style="background-image: url('bg-galeri.jpg');">
+    <div class="absolute inset-0 bg-black/70"></div>
+    <div class="relative z-10 container mx-auto px-6 fade-in">
+      <h2 class="font-playfair text-4xl mb-12">Galeri Foto</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <img src="foto1.jpg" class="rounded-lg shadow-md hover:scale-105 transition-transform">
+        <img src="foto2.jpg" class="rounded-lg shadow-md hover:scale-105 transition-transform">
+        <img src="foto3.jpg" class="rounded-lg shadow-md hover:scale-105 transition-transform">
+        <img src="foto4.jpg" class="rounded-lg shadow-md hover:scale-105 transition-transform">
+      </div>
+    </div>
+  </section>
 
-        const updateCountdown = setInterval(function() {
-            const now = new Date().getTime();
-            const distance = communionDate - now;
+  <!-- ===== UNGKAPAN TERIMA KASIH ===== -->
+  <section class="slide py-20 bg-cover bg-center text-white text-center" style="background-image: url('bg-thanks.jpg');">
+    <div class="absolute inset-0 bg-black/70"></div>
+    <div class="relative z-10 container mx-auto px-6 max-w-2xl fade-in">
+      <h2 class="font-playfair text-4xl mb-6">Terima Kasih</h2>
+      <p class="text-lg leading-relaxed">
+        Dengan penuh sukacita, kami sekeluarga mengucapkan terima kasih atas doa,
+        perhatian, dan kehadiran Bapak/Ibu/Saudara/i yang turut menyemarakkan
+        perayaan sakral ini.
+      </p>
+      <p class="mt-6 font-semibold">Keluarga Besar<br>Moses Prodigio Pajar</p>
+    </div>
+  </section>
 
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+  <!-- FOOTER -->
+  <footer class="py-6 bg-gray-900 text-white text-center">
+    <p class="text-sm">© 2025 Keluarga Pajar | Undangan Komuni Pertama</p>
+  </footer>
 
-            document.getElementById("days").innerHTML = String(days).padStart(2, '0');
-            document.getElementById("hours").innerHTML = String(hours).padStart(2, '0');
-            document.getElementById("minutes").innerHTML = String(minutes).padStart(2, '0');
-            document.getElementById("seconds").innerHTML = String(seconds).padStart(2, '0');
-
-            if (distance < 0) {
-                clearInterval(updateCountdown);
-                document.getElementById("countdown-timer").innerHTML = "<p class='text-2xl'>Acara telah dimulai!</p>";
-            }
-        }, 1000);
-
-        // Mobile Menu Toggle
-        const menuButton = document.getElementById('menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        menuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-
-        // Close mobile menu when a link is clicked
-        const mobileMenuLinks = mobileMenu.querySelectorAll('a');
-        mobileMenuLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.add('hidden');
-            });
-        });
-
-        // Parallax Effect for Hero Section
-        const heroSection = document.getElementById('hero');
-        window.addEventListener('scroll', () => {
-            const scrollPosition = window.pageYOffset;
-            heroSection.style.backgroundPositionY = -scrollPosition * 0.3 + 'px'; // Adjust 0.3 for speed
-        });
-
-        // Fade-in on Scroll Animation
-        const fadeInElements = document.querySelectorAll('.fade-in');
-
-        const observerOptions = {
-            root: null, // relative to the viewport
-            rootMargin: '0px',
-            threshold: 0.1 // 10% of the element must be visible
-        };
-
-        const observer = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('appear');
-                    observer.unobserve(entry.target); // Stop observing once it's visible
-                }
-            });
-        }, observerOptions);
-
-        fadeInElements.forEach(element => {
-            observer.observe(element);
-        });
-
-        // Music Player Modal Logic
-        const musicModal = document.getElementById('musicModal');
-        const openMusicModalBtn = document.getElementById('open-music-modal');
-        const backgroundMusic = document.getElementById('backgroundMusic');
-        const unmuteButton = document.getElementById('unmuteButton');
-
-        // Try to play music when the page loads (it will likely be muted)
-        window.addEventListener('load', () => {
-            backgroundMusic.play().catch(error => {
-                console.log("Autoplay was prevented or muted:", error);
-                // If autoplay is prevented, the user will need to interact
-                // The modal button will handle this.
-            });
-        });
-
-
-        openMusicModalBtn.addEventListener('click', () => {
-            musicModal.style.display = 'flex';
-            // When modal opens, ensure music is playing (still might be muted)
-            backgroundMusic.play().catch(error => {
-                console.log("Attempted to play music on modal open, but was prevented:", error);
-            });
-        });
-
-        unmuteButton.addEventListener('click', () => {
-            if (backgroundMusic.muted) {
-                backgroundMusic.muted = false;
-                backgroundMusic.play().catch(error => {
-                    console.log("Error playing music after unmute:", error);
-                });
-                unmuteButton.innerHTML = '<i class="fas fa-volume-up mr-2"></i> Suara Aktif';
-            } else {
-                backgroundMusic.muted = true;
-                unmuteButton.innerHTML = '<i class="fas fa-volume-mute mr-2"></i> Mute';
-            }
-        });
-
-        window.closeMusicModal = function() { // Made globally accessible
-            musicModal.style.display = 'none';
-            // Optionally pause music when modal is closed
-            // backgroundMusic.pause();
-        }
-
-        // Close modal if clicked outside content
-        window.addEventListener('click', (event) => {
-            if (event.target == musicModal) {
-                window.closeMusicModal();
-            }
-            if (event.target == document.getElementById('myModal')) {
-                window.closeModal();
-            }
-        });
-
-        // Custom modal close button event listener
-        document.getElementById('myModal').querySelector('.close-button').addEventListener('click', window.closeModal);
-
-    </script>
-
-<!-- ================= SCRIPT TAMU ================= -->
+  <!-- SCRIPT Nama Tamu -->
   <script>
     const urlParams = new URLSearchParams(window.location.search);
     const guestName = urlParams.get('tamu');
     if (guestName) {
-      document.getElementById("guestNameDisplay").textContent = `Kepada Yth: ${guestName}`;
+      document.getElementById("guestNameDisplay").textContent = `Kepada Yth: 
+		${guestName}`;
     }
   </script>
+
+<script>
+  const music = document.getElementById("backgroundMusic");
+  const toggleBtn = document.getElementById("toggleMusic");
+  const icon = document.getElementById("musicIcon");
+
+  toggleBtn.addEventListener("click", () => {
+    if (music.muted) {
+      music.muted = false;
+      icon.classList.remove("fa-volume-mute");
+      icon.classList.add("fa-volume-up");
+    } else {
+      music.muted = true;
+      icon.classList.remove("fa-volume-up");
+      icon.classList.add("fa-volume-mute");
+    }
+  });
+</script>
 </body>
 </html>
