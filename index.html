@@ -14,154 +14,13 @@
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
-    <style>
-        /* Menggunakan font Inter secara default */
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f0f0f0; /* Warna latar belakang umum */
-            overflow-x: hidden; /* Mencegah scrolling horizontal */
-        }
-
-        /* Kelas untuk font Playfair Display */
-        .font-playfair {
-            font-family: 'Playfair Display', serif;
-        }
-
-        /* Overlay gelap untuk gambar latar belakang */
-        .overlay {
-            background-color: rgba(0, 0, 0, 0.5); /* Sedikit lebih transparan agar gambar tetap terlihat */
-        }
-
-        /* Animasi fade-in */
-        .fade-in {
-            animation: fadeIn 1s ease-out forwards;
-            opacity: 0;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Delay untuk animasi fade-in pada elemen tertentu */
-        .fade-in-delay-1 { animation-delay: 0.3s; }
-        .fade-in-delay-2 { animation-delay: 0.6s; }
-        .fade-in-delay-3 { animation-delay: 0.9s; }
-
-        /* Styling spesifik untuk logo komuni */
-        .logo-komuni {
-            max-width: 180px; /* Ukuran lebih terkontrol */
-            height: auto;
-            border-radius: 50%; /* Membuat logo bulat */
-            border: 5px solid rgba(255, 255, 255, 0.8); /* Bingkai putih */
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); /* Sedikit bayangan */
-        }
-
-        /* Styling untuk section dengan gambar latar belakang */
-        section {
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            min-height: 100vh; /* Pastikan setiap section mengisi viewport */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative; /* Untuk overlay */
-        }
-
-        /* Style untuk container utama di dalam section */
-        section .container {
-            position: relative;
-            z-index: 10;
-            padding-top: 4rem; /* Menambah padding agar tidak terlalu mepet atas/bawah */
-            padding-bottom: 4rem;
-        }
-
-        /* Hover effect untuk kartu waktu & tempat */
-        .time-place-card:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Responsif untuk gambar galeri */
-        .gallery-image {
-            width: 100%;
-            height: 200px; /* Tinggi tetap untuk konsistensi */
-            object-fit: cover; /* Memastikan gambar mengisi area tanpa terdistorsi */
-        }
-
-        /* Warna khusus */
-        .text-sage-green-dark {
-            color: #4CAF50; /* Contoh warna hijau sage */
-        }
-
-        /* Musik player styling */
-        #musicPlayer {
-            backdrop-filter: blur(5px); /* Efek blur pada background player */
-            background-color: rgba(255, 255, 255, 0.9); /* Sedikit transparan */
-            border: 1px solid rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-        }
-        #musicPlayer:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        /* Menyesuaikan iframe Google Maps */
-        .aspect-w-16 {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-        }
-        .aspect-w-16 iframe {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-        }
-
-        /* Styling untuk pesan "Kepada Yth" */
-        #guestNameDisplay {
-            white-space: pre-line; /* Mempertahankan baris baru dari template string */
-        }
-
-        /* Tambahan untuk scroll-snap jika ingin pengalaman slide */
-        html {
-            scroll-snap-type: y mandatory;
-            scroll-behavior: smooth;
-        }
-        .slide {
-            scroll-snap-align: start;
-        }
-
-        /* Custom scrollbar (opsional) */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-    </style>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="overflow-x-hidden">
+<body class="overflow-x-hidden frame-songke"> <!-- Menambahkan kelas frame-songke ke body -->
 
     <!-- ====== PLAYER MUSIK ====== -->
-    <div id="musicPlayer" class="fixed bottom-4 right-4 bg-white rounded-full shadow-lg flex items-center gap-3 px-4 py-2 z-50 hover:bg-gray-50 cursor-pointer">
+    <div id="musicPlayer" class="fixed bottom-4 right-4 z-50 hover:bg-gray-50 cursor-pointer">
         <button id="toggleMusic" class="text-sage-green-dark text-xl focus:outline-none">
             <i id="musicIcon" class="fas fa-volume-mute"></i>
         </button>
@@ -175,7 +34,7 @@
     </audio>
 
     <!-- ===== COVER ===== -->
-    <section id="cover" class="slide cover relative h-screen flex flex-col items-center justify-center text-white text-center"
+    <section id="cover" class="relative h-screen flex flex-col items-center justify-center text-white text-center"
              style="background-image: url('bg-cover.jpg');">
 
         <!-- Overlay gelap -->
@@ -194,7 +53,7 @@
         </div>
 
         <!-- Nama tamu di bagian bawah cover -->
-        <div class="absolute bottom-8 left-0 right-0 z-10 px-4 sm:px-6 fade-in fade-in-delay-3">
+        <div class="absolute bottom-8 left-0 right-0 z-10 px-4 sm:px-6 fade-in fade-in-delay-3 animate-bounce-slow">
             <div class="bg-white bg-opacity-90 border-4 border-yellow-500 rounded-2xl px-6 py-4 shadow-xl max-w-sm mx-auto">
                 <p class="text-base sm:text-lg font-medium text-gray-700 text-center mb-2">Kepada Yth:</p>
                 <p id="guestNameDisplay" class="text-xl sm:text-2xl font-bold text-gray-800 text-center">
@@ -205,7 +64,7 @@
     </section>
 
     <!-- ===== NARASI UNDANGAN ===== -->
-    <section class="slide py-20 bg-cover bg-center text-white" style="background-image: url('bg-narasi.jpg');">
+    <section class="py-20 bg-cover bg-center text-white" style="background-image: url('bg-narasi.jpg');">
         <div class="absolute inset-0 bg-black/60"></div>
         <div class="relative z-10 container mx-auto max-w-3xl px-6 text-center fade-in">
             <h2 class="font-playfair text-4xl md:text-5xl mb-8 drop-shadow-lg">Salam Hangat</h2>
@@ -218,7 +77,7 @@
     </section>
 
     <!-- ===== WAKTU & TEMPAT ===== -->
-    <section class="slide py-20 bg-cover bg-center text-white text-center" style="background-image: url('bg-waktu.jpg');">
+    <section class="py-20 bg-cover bg-center text-white text-center" style="background-image: url('bg-waktu.jpg');">
         <div class="absolute inset-0 bg-black/70"></div>
         <div class="relative z-10 container mx-auto px-6 fade-in">
             <h2 class="font-playfair text-4xl md:text-5xl mb-12 drop-shadow-lg">Waktu & Tempat</h2>
@@ -244,7 +103,7 @@
     </section>
 
     <!-- ===== PETA GOOGLE MAPS ===== -->
-    <section class="slide py-20 bg-cover bg-center text-center" style="background-image: url('bg-maps.jpg');">
+    <section class="py-20 bg-cover bg-center text-center" style="background-image: url('bg-maps.jpg');">
         <div class="absolute inset-0 bg-black/70"></div>
         <div class="relative z-10 container mx-auto px-6 fade-in">
             <h2 class="font-playfair text-4xl md:text-5xl text-white mb-12 drop-shadow-lg">Lokasi Acara</h2>
@@ -260,7 +119,7 @@
     </section>
 
     <!-- ===== GALERI FOTO ===== -->
-    <section class="slide py-20 bg-cover bg-center text-center text-white" style="background-image: url('bg-galeri.jpg');">
+    <section class="py-20 bg-cover bg-center text-center text-white" style="background-image: url('bg-galeri.jpg');">
         <div class="absolute inset-0 bg-black/70"></div>
         <div class="relative z-10 container mx-auto px-6 fade-in">
             <h2 class="font-playfair text-4xl md:text-5xl mb-12 drop-shadow-lg">Galeri Foto</h2>
@@ -274,7 +133,7 @@
     </section>
 
     <!-- ===== UNGKAPAN TERIMA KASIH ===== -->
-    <section class="slide py-20 bg-cover bg-center text-white text-center" style="background-image: url('bg-thanks.jpg');">
+    <section class="py-20 bg-cover bg-center text-white text-center" style="background-image: url('bg-thanks.jpg');">
         <div class="absolute inset-0 bg-black/70"></div>
         <div class="relative z-10 container mx-auto px-6 max-w-2xl fade-in">
             <h2 class="font-playfair text-4xl md:text-5xl mb-8 drop-shadow-lg">Terima Kasih</h2>
