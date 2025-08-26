@@ -1,115 +1,108 @@
-/* ========== STYLE GLOBAL ========== */
 body {
-    font-family: 'Inter', sans-serif;
-    scroll-behavior: smooth; /* Smooth scrolling untuk anchor links */
-    overflow-x: hidden; /* Mencegah scroll horizontal */
+  font-family: 'Inter', sans-serif;
+}
+.font-playfair {
+  font-family: 'Playfair Display', serif;
 }
 
-/* Scrollbar custom */
-::-webkit-scrollbar {
-    width: 8px;
-}
-::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
-::-webkit-scrollbar-thumb {
-    background: #A0C49D; /* Sage Green */
-    border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-    background: #8aa789;
+/* Slide layout */
+.slide {
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
-/* ========== BACKGROUND & PARALLAX ========== */
-.parallax-bg {
-    background-image: url('fotogio.jpg'); /* default contoh */
-    background-attachment: fixed;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-}
-
-/* Responsif untuk layar kecil (HP) */
-@media (max-width: 768px) {
-    .parallax-bg {
-        background-attachment: scroll; /* Hilangkan parallax agar tidak bug */
-    }
-}
-
-/* ========== ANIMASI ========== */
-/* Fade-in saat scroll */
+/* Animasi fade-in */
 .fade-in {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 1s ease forwards;
 }
-.fade-in.appear {
+@keyframes fadeInUp {
+  to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+/* ===== Bingkai Songke Kiri-Kanan ===== */
+.frame-songke {
+  position: relative;
 }
 
-/* ========== SECTION BORDER ========== */
-.section-border {
-    position: relative;
-    padding: 2rem 0;
-}
-.section-border::before,
-.section-border::after {
-    content: '';
-    position: absolute;
-    background-color: #A0C49D; /* Sage Green */
-    border-radius: 50%;
-    opacity: 0.3;
-    z-index: -1;
-}
-.section-border::before {
-    width: 150px;
-    height: 150px;
-    top: -75px;
-    left: -75px;
-}
-.section-border::after {
-    width: 100px;
-    height: 100px;
-    bottom: -50px;
-    right: -50px;
+.frame-songke::before,
+.frame-songke::after {
+  content: "";
+  position: fixed;       /* selalu menempel di layar */
+  top: 0;
+  bottom: 0;
+  width: 60px;           /* lebar bingkai, bisa disesuaikan */
+  background: url('songke.png') repeat-y center/cover;
+  z-index: 50;           /* pastikan di atas background, tapi di bawah konten */
 }
 
-/* ========== MODAL ========== */
-.modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1000; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-    justify-content: center;
-    align-items: center;
+.frame-songke::before {
+  left: 0;               /* sisi kiri */
 }
 
-.modal-content {
-    background-color: #fefefe;
-    margin: auto;
-    padding: 20px;
-    border-radius: 12px;
-    width: 80%;
-    max-width: 500px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    text-align: center;
+.frame-songke::after {
+  right: 0;              /* sisi kanan */
 }
 
-.close-button {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
+/* Responsif: jika layar kecil (HP), perkecil bingkai */
+@media (max-width: 768px) {
+  .frame-songke::before,
+  .frame-songke::after {
+    width: 35px;
+    background-size: contain;
+  }
 }
-.close-button:hover,
-.close-button:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
+/* Tombol musik */
+#musicPlayer {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  animation: pulse 2s infinite; /* supaya hidup di HP juga */
+}
+#musicPlayer:hover {
+  transform: scale(1.1);
+}
+/* Geser tombol musik agar tidak tertutup frame */
+#musicPlayer {
+  position: fixed;
+  bottom: 20px;     /* jarak dari bawah */
+  right: 40px;      /* jarak dari kanan, sesuaikan dengan lebar bingkai songke */
+  z-index: 1000;    /* pastikan tampil di atas */
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* Animasi bouncing untuk nama tamu */
+.animate-bounce-slow {
+  animation: bounce 3s infinite;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+/* Responsif background */
+.cover, .slide {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+@media (max-width: 768px) {
+  .cover, .slide {
+    background-attachment: scroll; /* agar tidak bug di HP */
+  }
+}
+/* style.css */
+#cover h1 {
+  transform: translateY(-200px); /* geser ke atas */
+}
+#cover img {
+  animation: fadeInUp 1.2s ease forwards;
 }
